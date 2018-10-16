@@ -29,5 +29,3 @@ module.exports = {
     port: 3001
   }
 };
-
-console.log(path.resolve(__dirname, 'src'));
