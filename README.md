@@ -7,6 +7,10 @@ Provides classes to manage single controls, control collections and, also, handl
 
 Its main use is for rendering forms with React.
 
+Install it with:
+
+    npm install --save @yuigoto/ctrl
+
 -----
 
 Todo
