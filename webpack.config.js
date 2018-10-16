@@ -20,6 +20,10 @@ module.exports = {
       }
     ]
   },
+  output: {
+    filename: "index.js",
+    libraryTarget: "commonjs2"
+  },
   plugins: [HtmlWebpack],
   resolve: {
     extensions: [".js", ".jsx"],
