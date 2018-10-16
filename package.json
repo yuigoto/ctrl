@@ -1,6 +1,6 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generic, multi-purpose control class, mostly useful for html inputs.",
   "main": "dist/index.js",
   "publishConfig": {
@@ -29,7 +29,11 @@
     "prop-types": "^15.6.2",
     "classnames": "^2.2.6"
   },
-  "dependencies": {},
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "core-js": "^2.5.7",
+    "prop-types": "^15.6.2"
+  },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
@@ -39,11 +43,8 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
-    "classnames": "^2.2.6",
-    "core-js": "^2.5.7",
     "css-loader": "^1.0.0",
     "html-webpack-plugin": "^3.2.0",
-    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "style-loader": "^0.23.1",
