@@ -21,8 +21,8 @@ module.exports = {
     ]
   },
   output: {
-    filename: "index.js",
-    libraryTarget: "commonjs2"
+    path: path.join(__dirname, "examples/dist"),
+    filename: "bundle.js"
   },
   plugins: [HtmlWebpack],
   resolve: {
