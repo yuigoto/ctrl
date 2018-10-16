@@ -5,10 +5,10 @@ import PropTypes from "prop-types";
 // Project import
 import {
   Email as EmailRegex
-} from "utils/Expressions";
-import Cpf from "validators/Cpf";
-import Cnpj from "validators/Cnpj";
-import Pis from "validators/Pis";
+} from "../utils/Expressions";
+import Cpf from "../validators/Cpf";
+import Cnpj from "../validators/Cnpj";
+import Pis from "../validators/Pis";
 
 /**
  * Ctrl\Ctrl

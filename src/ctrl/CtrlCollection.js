@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Project import
-import Ctrl from "ctrl/Ctrl";
+import Ctrl from "./Ctrl";
 
 /**
  * Ctrl\CtrlCollection

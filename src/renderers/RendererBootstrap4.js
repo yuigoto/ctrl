@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 
 // Local dependencies
-import Ctrl from "ctrl/Ctrl";
-import CtrlCollection from "ctrl/CtrlCollection";
+import Ctrl from "../ctrl/Ctrl";
+import CtrlCollection from "../ctrl/CtrlCollection";
 
 /**
  *

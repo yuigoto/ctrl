@@ -13,6 +13,6 @@
  * @copyright (c) 2018 Fabio Y. Goto
  * @license   MIT
  */
-export Ctrl from "ctrl/Ctrl";
-export CtrlCollection from "ctrl/CtrlCollection";
-export RendererBootstrap4 from "renderers/RendererBootstrap4";
+export Ctrl from "./ctrl/Ctrl";
+export CtrlCollection from "./ctrl/CtrlCollection";
+export RendererBootstrap4 from "./renderers/RendererBootstrap4";

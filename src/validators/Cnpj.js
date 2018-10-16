@@ -1,4 +1,4 @@
-import { Sanitize } from "utils/Utils";
+import { Sanitize } from "../utils/Utils";
 
 /**
  * Validators\Cnpj
