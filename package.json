@@ -1,6 +1,6 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Generic, multi-purpose control class, mostly useful for html inputs.",
   "main": "dist/index.js",
   "publishConfig": {
@@ -23,21 +23,15 @@
   "author": "Fabio Y. Goto <lab@yuiti.dev>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "classnames": "^2.2.6",
-    "prop-types": "^15.7.2"
-  },
-  "bugs": {
-    "url": "https://github.com/yuigoto/ctrl/issues"
-  },
-  "homepage": "https://github.com/yuigoto/ctrl#readme",
-  "peerDependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "prop-types": "^15.6.2",
     "classnames": "^2.2.6"
   },
+  "bugs": {
+    "url": "https://github.com/yuigoto/ctrl/issues"
+  },
+  "homepage": "https://github.com/yuigoto/ctrl#readme",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
