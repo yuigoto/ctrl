@@ -1,755 +1,933 @@
-// Dependencies
-import React from "react";
-import PropTypes from "prop-types";
+import { Cpf, Cnpj, Pis, Email, CreditCard } from "@yuigoto/validators";
 
-// Project import
-import {
-  Email as EmailRegex
-} from "../utils/Expressions";
-import Cpf from "../validators/Cpf";
-import Cnpj from "../validators/Cnpj";
-import Pis from "../validators/Pis";
+import { CtrlType } from "./CtrlType";
+import { CtrlStates } from "./CtrlStates";
 
 /**
- * Ctrl\Ctrl
+ * Ctrl/Ctrl
  * ----------------------------------------------------------------------
  * Multi-purpose control class, mostly useful for HTML inputs.
- *
- * @author    Fabio Y. Goto <lab@yuiti.com.br>
- * @since     0.0.1
- * @copyright (c) 2018 Fabio Y. Goto
- * @license   MIT
+ * 
+ * @since 0.0.1
  */
-class Ctrl {
+export class Ctrl {
   // Properties
   // --------------------------------------------------------------------
 
   /**
    * Control name.
-   *
+   * 
    * @type {String}
    */
   name;
 
   /**
-   * Control label.
-   *
+   * Control label, must be a human-readable string.
+   * 
    * @type {String}
    */
   label;
 
   /**
    * Control value.
-   *
+   * 
    * @type {*}
    */
   value;
 
   /**
-   * Control options.
+   * If the current control is disabled or not.
    *
+   * @type {Boolean}
+   */
+  disabled;
+
+  /**
+   * Control options, when using these types:
+   * - `CtrlType.SINGLE_OPTION`
+   * - `CtrlType.MULTIPLE_OPTION`
+   * - `CtrlType.DROPDOWN`
+   * 
    * @type {Array}
    */
   options;
 
   /**
-   * Control state.
-   *
-   * @type {String}
+   * Control state, based on `CtrlStates`.
+   * 
+   * @type {Number}
    */
   state;
 
   /**
-   * Placeholder text.
-   *
+   * Human-readable placeholder text for fields.
+   * 
    * @type {String}
    */
   placeholder;
 
   /**
-   * Control type.
-   *
-   * @type {String}
+   * Control type, determines how the control behaves and works.
+   * 
+   * Based on `CtrlType`.
+   * 
+   * @type {Number}
    */
   type;
 
   /**
-   * Used with the boolean type control, defines if the formatting should
-   * follow a custom style (in the renderer component).
-   *
+   * Custom flag, to add compatibility with the `CtrlBS4Renderer` custom 
+   * radio and checkbox inputs.
+   * 
    * @type {Boolean}
    */
   custom;
 
   /**
-   * Custom CSS class to be applied to an input.
-   *
+   * Custom CSS class to be applied on the input (or anything the renderer uses).
+   * 
    * @type {String}
    */
-  custom_class;
+  customClass;
 
   /**
-   * `onChange` event callable.
-   *
+   * `onChange` callable function, must accept the control value as input.
+   * 
    * @type {Function}
    */
   onChange;
 
   /**
-   * A callable or array of callables that are applied onto the control's
-   * value during validation/processing.
-   *
-   * Callables should accept the raw input and return the processed input.
-   *
-   * @type {Array|Function}
+   * Callable function or array of callable functions that are applied to the 
+   * control's value during validation/processing.
+   * 
+   * Callables should accept the control value and return the modified input.
+   * 
+   * @type {Array|Function} 
    */
-  interceptor;
+  _interceptor;
 
   /**
-   * A callable or array of callables that are applied onto the control's
-   * value during validation/processing.
-   *
-   * Callables should accept the raw input and return the processed input.
-   *
-   * @type {Array|Function}
-   */
-  interceptors;
-
-  /**
-   * Control message, usually displays status messages.
-   *
+   * Control message, usually display the status messages.
+   * 
    * @type {String}
    */
   message;
 
   /**
-   * E-mail validation message.
-   *
-   * @type {String}
-   */
-  emailMessage;
-
-  /**
-   * Cpf validation message.
-   *
-   * @type {String}
-   */
-  cpfMessage;
-
-  /**
-   * Cnpj validation message.
-   *
-   * @type {String}
-   */
-  cnpjMessage;
-
-  /**
-   * Pis validation message.
-   *
-   * @type {String}
-   */
-  pisMessage;
-
-  /**
    * Control required status.
-   *
+   * 
    * @type {Boolean}
    */
   required;
 
   /**
-   * Control required message.
-   *
+   * Control required status message.
+   * 
    * @type {String}
    */
   requiredMessage;
 
   /**
-   * Control max input length.
-   *
+   * Max input length.
+   * 
    * @type {Number}
    */
   maxLength;
 
   /**
-   * Control max input length validation message.
-   *
+   * Max input length validation message.
+   * 
    * @type {String}
    */
   maxLengthMessage;
-
+  
   /**
-   * Control min input length.
-   *
+   * Min input length.
+   * 
    * @type {Number}
    */
   minLength;
-
+  
   /**
-   * Control min input length validation message.
-   *
+   * Min input length validation message.
+   * 
    * @type {String}
    */
   minLengthMessage;
 
   /**
-   * Control max answers length (select/checkboxes).
-   *
+   * Max answers accepted, when using the `CtrlType.MULTIPLE_OPTION` input.
+   * 
    * @type {Number}
    */
   maxAnswers;
 
   /**
-   * Control max answers length validation message.
-   *
+   * Max answers validation message.
+   * 
    * @type {String}
    */
   maxAnswersMessage;
 
   /**
-   * Control min answers length (select/checkboxes).
-   *
+   * Min answers accepted, when using the `CtrlType.MULTIPLE_OPTION` input.
+   * 
    * @type {Number}
    */
   minAnswers;
 
   /**
-   * Control min answers length validation message.
-   *
+   * Min answers validation message.
+   * 
    * @type {String}
    */
   minAnswersMessage;
 
   /**
-   * Regular expression for validation.
-   *
+   * RegExp object used to validate the input.
+   * 
    * @type {RegExp}
    */
   regex;
 
   /**
-   * Regular expression validation message.
-   *
+   * RegExp validation message.
+   * 
    * @type {String}
    */
   regexMessage;
 
   /**
-   * Control textarea columns (use only if `textarea`).
+   * Brazilian Legal Entity Document (CNPJ) number validation message.
+   * 
+   * Exclusive for the `CtrlTypes.CNPJ` input type.
+   * 
+   * @type {String}
+   */
+  cnpjMessage;
+
+  /**
+   * Brazilian Natural Person Registry (CPF) number validation message.
+   * 
+   * Exclusive for the `CtrlTypes.CPF` input type.
+   * 
+   * @type {String}
+   */
+  cpfMessage;
+
+  /**
+   * Brazilian Social Integration Program (PIS) number validation message.
+   * 
+   * Exclusive for the `CtrlTypes.PIS` input type.
+   * 
+   * @type {String}
+   */
+  pisMessage;
+
+  /**
+   * Credit card number validation message.
+   * 
+   * Exclusive for the `CtrlTypes.CREDIT_CARD` input type.
+   */
+  creditCardMessage;
+
+  /**
+   * E-mail address validation message.
+   * 
+   * Exclusive for the `CtrlTypes.EMAIL` input type.
+   */
+  emailMessage;
+
+  /**
+   * URL type validation message.
    *
+   * Exclusive for the `CtrlTypes.URL` input type.
+   */
+  urlMessage;
+
+  /**
+   * `CtrlType.TEXTAREA` type input column limit.
+   * 
    * @type {Number}
    */
   cols;
 
   /**
-   * Control textarea rows (use only if `textarea`).
-   *
+   * `CtrlType.TEXTAREA` type input row limit.
+   * 
    * @type {Number}
    */
   rows;
 
-  // Constructor
+  // Lifecycle
   // --------------------------------------------------------------------
 
   /**
-   * @param {*} props
+   * Constructor.
+   * 
+   * @param {Object} props 
+   *     Object containing key/value pairs mirroring the control properties
    */
-  constructor(props) {
-    // Merges props
+  constructor (props) {
     props = this._defaultProps(props);
 
-    // Checks
-    if (props.type === "checkbox_group" || props.type === "multiple_option") {
+    if (
+      props.type === CtrlType.MULTIPLE_OPTION
+    ) {
+      // Checkbox/multiple options must have an array-based value
       props.value = [];
     }
-
-    // Maps all prop key values to this object
+    
+    // Map props to properties
     Object.keys(props).map((key) => {
       this[key] = props[key];
     });
+  }
+
+  /**
+   * Returns the controller type (for input tags).
+   *
+   * @returns {String}
+   */
+  getType () {
+    switch (this.type) {
+      case CtrlType.SINGLE_OPTION:
+      case CtrlType.RADIO_GROUP:
+        return "radio";
+      case CtrlType.MULTIPLE_OPTION:
+      case CtrlType.CHECKBOX_GROUP:
+      case CtrlType.BOOLEAN:
+        return "checkbox";
+      case CtrlType.DROPDOWN:
+        return "select";
+      case CtrlType.TEXTAREA:
+        return "textarea";
+      case CtrlType.CNPJ:
+      case CtrlType.CPF:
+      case CtrlType.PIS:
+      case CtrlType.CREDIT_CARD:
+      case CtrlType.PHONE:
+        return "tel";
+      case CtrlType.PASSWORD:
+        return "password";
+      case CtrlType.EMAIL:
+        return "email";
+      default:
+        return "text";
+    }
+  }
+
+  /**
+   * Checks if the desired option is currently selected/present on the 
+   * value array.
+   * 
+   * Works only for multi-option type inputs.
+   * 
+   * Must be fired on the renderer.
+   * 
+   * @param {*} option 
+  *      Single option to test for 
+  * @returns {Boolean}
+   */
+  isValueSelected (option) {
+    const { value } = this;
+
+    return (
+      value 
+      && value instanceof Array 
+      && value.indexOf(option) >= 0
+    );
+  }
+
+  /**
+   * Fires when a boolean type input suffers change/toggle.
+   * 
+   * Must be fired on the renderer.
+   * 
+   * @param {Boolean} value 
+   *      Value to toggle 
+   */
+  onBooleanChange (value) {
+    this.value = !value;
+    this.resetState();
+    if (this.onChange) this.onChange(value);
+  }
+
+  /**
+   * Fires when the value is modified.
+   * 
+   * Must be fired on the renderer.
+   * 
+   * @param {*} value 
+   *     Value to update
+   */
+  onValueChange (value) {
+    this.value = this.applyInterceptors(value);
+    this.resetState();
+    if (this.onChange) this.onChange(value);
+  }
+
+  /**
+   * Fires when a single option is checked/unchecked on a multi-option
+   * input type.
+   * 
+   * Must be executed individually on each check.
+   * 
+   * Must be fired on the renderer.
+   * 
+   * @param {*} value 
+   *     Value to toggle 
+   */
+  onValueToggle (value) {
+    value = this.applyInterceptors(value);
+
+    let valuesArray = this.value;
+    if (!valuesArray || !(valuesArray instanceof Array)) {
+      valuesArray = [];
+      valuesArray.push(value);
+    } else {
+      let _idx = valuesArray.indexOf(value);
+
+      if (_idx >= 0) {
+        valuesArray.splice(_idx, 1);
+      } else {
+        valuesArray.push(value);
+      }
+    }
+
+    this.value = valuesArray;
+    this.resetState();
+    if (this.onChange) this.onChange(value);
+  }
+
+  /**
+   * Resets control state to default.
+   */
+  resetState () {
+    this.message = "";
+    this.state = CtrlStates.NORMAL;
+  }
+
+  // Getters + Setters
+  // --------------------------------------------------------------------
+
+  /**
+   * Callable function or array of callable functions that are applied to the 
+   * control's value during validation/processing.
+   * 
+   * Callables should accept the control value and return the modified input.
+   * 
+   * @type {Array|Function}
+   */
+  get interceptor () {
+    return this._interceptor;
+  }
+
+  set interceptor (value) {
+    this._interceptor = value;
+  }
+
+  /**
+   * Alias for `interceptor`.
+   * 
+   * @type {Array|Function}
+   */
+  get interceptors () {
+    return this._interceptor;
+  }
+
+  set interceptors (value) {
+    this._interceptor = value;
+  }
+
+  // Public Methods
+  // --------------------------------------------------------------------
+
+  /**
+   * Applies any interceptor declared for the current control on its value.
+   * 
+   * @param {*} value 
+   *     Value to be intercepted
+   * @returns {*}
+   */
+  applyInterceptors (value) {
+    const { interceptor } = this;
+
+    if (interceptor && interceptor !== null && interceptor !== undefined) {
+      try {
+        if (interceptor instanceof Array) {
+          for (let func of interceptor) {
+            value = func(value);
+          }
+        } else {
+          value = interceptor(value);
+        }
+      } catch (err) {
+        console.exception(err, interceptor);
+      }
+    }
+
+    return value;
+  }
+
+  /**
+   * Invalidates this control with an error message, may be used to override 
+   * the current message set.
+   * 
+   * @param {String} message 
+   *     Message to set for invalidation 
+   * @returns {Ctrl} 
+   */
+  invalidate (message) {
+    this.state = CtrlStates.ERROR;
+    this.message = message || "Invalid input value provided.";
+    return this;
+  }
+
+  /**
+   * Removes non-digit characters from a string.
+   * 
+   * IMPORTANT:
+   * Might break float values!
+   * 
+   * @param {String|Number} value 
+   *     Value to be sanitized 
+   * @returns {String} 
+   */
+  sanitizeToNumbersOnly (value) {
+    if (typeof value !== "number" || typeof value !== "string") return "";
+    value = (typeof value !== "number") 
+      ? value.trim().replace(/\D/g, "")
+      : value.toString();
+
+    return value;
+  }
+
+  /**
+   * Validates the control using all validatio methods.
+   */
+  validate () {
+    this.resetState();
+
+    return (
+      this._validateRequired() 
+      && this._validateMaxLength() 
+      && this._validateMinLength() 
+      && this._validateMaxAnswers() 
+      && this._validateMinAnswers() 
+      && this._validateEmail() 
+      && this._validateRegex() 
+      && this._validateCpf() 
+      && this._validateCnpj() 
+      && this._validatePis()
+      && this._validateUrl()
+      && this._validateCreditCard()
+    );
+  }
+
+  /**
+   * Overrides the default `toString()` method.
+   * 
+   * @returns {String}
+   */
+  toString () {
+    return "[object Ctrl]";
+  }
+
+  /**
+   * Overrides the default `toJSON()` method, returns a single object with 
+   * key/value pairs of the control's names and values.
+   * 
+   * Not all values are returned, only the presentation-related ones.
+   * 
+   * @returns {Object}
+   */
+  toJSON () {
+    return {
+      name: this.name, 
+      label: this.label, 
+      value: this.value, 
+      options: this.options, 
+      state: this.state, 
+      placeholder: this.placeholder, 
+      type: this.type, 
+      custom: this.custom, 
+      customClass: this.customClass, 
+      required: this.required, 
+      regex: this.regex.toString(), 
+      cols: this.cols, 
+      rows: this.rows, 
+    };
   }
 
   // Private Methods
   // --------------------------------------------------------------------
 
   /**
-   * Merges the user defined props with default values.
-   *
-   * @param props
-   * @returns {*}
+   * Sets and/or merges default props with the provided ones for the control.
+   * 
+   * @param {Object} props 
+   *     Props to merge or override with default values
+   * @returns {Object}
    * @private
    */
-  _defaultProps(props) {
-    let default_props =  {
+  _defaultProps (props) {
+    let defaultProps = {
       name: null,
       label: null,
       value: null,
+      disabled: null,
       options: [],
-      state: "normal",
+      state: CtrlStates.NORMAL,
       placeholder: "",
-      type: "default",
+      type: CtrlType.DEFAULT,
       custom: false,
-      custom_class: null,
+      customClass: null,
       onChange: null,
       interceptor: null,
       interceptors: null,
       message: "",
-      emailMessage: "Invalid e-mail address provided.",
-      cpfMessage: "Invalid CPF number provided.",
-      cnpjMessage: "Invalid CNPJ number provided.",
-      pisMessage: "Invalid PIS number provided",
       required: false,
       requiredMessage: "This field is required",
       maxLength: null,
+      maxLengthMessage: "", 
       minLength: null,
+      minLengthMessage: "", 
       maxAnswers: null,
+      maxAnswersMessage: "", 
       minAnswers: null,
+      minAnswersMessage: "", 
       regex: null,
-      cols: null,
+      regexMessage: "", 
+      cnpjMessage: "",
+      cpfMessage: "",
+      pisMessage: "",
+      creditCardMessage: "", 
+      emailMessage: "",
+      urlMessage: "",
+      cols: null, 
       rows: null
     };
 
-    // Set messages that rely on values
-    default_props.maxLengthMessage = `Max length accepted is "${default_props.maxLength}" characters.`;
-    default_props.minLengthMessage = `Min length accepted is "${default_props.minLength}" characters.`;
-    default_props.maxAnswersMessage = `You can't choose more than "${default_props.maxAnswers}" options.`;
-    default_props.minAnswersMessage = `Please choose at least "${default_props.minAnswers}" options.`;
-    default_props.regexMessage = `The current value doesn't match the Regexp.`;
-
-    return Object.assign(
-      default_props,
+    let returnable = Object.assign(
+      {},
+      defaultProps, 
       props
     );
-  }
 
-  // Utilities
-  // --------------------------------------------------------------------
+    if (returnable.maxLength && returnable.maxLengthMessage === "") {
+      returnable.maxLengthMessage = `Max length accepted is "${returnable.maxLength}" characters.`;
+    }
+
+    if (returnable.minLength && returnable.minLengthMessage === "") {
+      returnable.minLengthMessage = `Min length accepted is "${returnable.minLength}" characters.`;
+    }
+
+    if (returnable.maxAnswers && returnable.maxAnswersMessage === "") {
+      returnable.maxAnswersMessage = `You can't choose more than "${returnable.maxAnswers}" options.`;
+    }
+
+    if (returnable.minAnswers && returnable.minAnswersMessage === "") {
+      returnable.minAnswersMessage = `Please choose at least "${returnable.minAnswers}" options.`;
+    }
+
+    if (returnable.regex && returnable.regexMessage === "") {
+      returnable.regexMessage = `The current value doesn't match the Regexp.`;
+    }
+
+    if (returnable.cnpjMessage === "") {
+      returnable.cnpjMessage = "Invalid CNPJ number.";
+    }
+
+    if (returnable.cpfMessage === "") {
+      returnable.cpfMessage = "Invalid CPF number.";
+    }
+
+    if (returnable.pisMessage === "") {
+      returnable.pisMessage = "Invalid PIS number.";
+    }
+
+    if (returnable.creditCardMessage === "") {
+      returnable.creditCardMessage = "Invalid credit card number.";
+    }
+
+    if (returnable.emailMessage === "") {
+      returnable.emailMessage = "Invalid email address provided.";
+    }
+
+    if (returnable.urlMessage === "") {
+      returnable.urlMessage = "Invalid URL provided.";
+    }
+
+    return returnable;
+  };
 
   /**
-   * Removes non-digit characters from a string.
-   *
-   * Not used for now.
-   *
-   * @param {*} value
+   * Used only if the control is marked as `required`.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  sanitizeNumbers(value) {
-    value = (typeof value  !== "number")
-      ? value.trim().replace(/\D/g, "")
-      : value.toString();
-    return value;
-  }
-
-  // Validation
-  // --------------------------------------------------------------------
-
-  /**
-   * Used when this control is marked as required.
-   *
-   * @returns {boolean}
-   */
-  validateRequired() {
-    const { value } = this;
+  _validateRequired () {
+    const { value, required, requiredMessage } = this;
 
     if (
-      this.required
+      required 
       && (
         !value
-        || value === null
-        || value === undefined
         || value === ""
         || value && value instanceof Array && !value.length
       )
     ) {
-      this.message = this.requiredMessage;
-      this.state = "error";
-
+      this.message = requiredMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * Validates input value max length.
-   *
-   * @returns {boolean}
+   * Validates the max length of the input value.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateMaxLength() {
+  _validateMaxLength () {
+    const { value, maxLength, maxLengthMessage } = this;
     if (
-      this.maxLength
-      && this.maxLength > 1
-      && this.value
-      && this.value.length > this.maxLength
+      maxLength 
+      && maxLength > 1 
+      && value 
+      && value.length > maxLength
     ) {
-      this.message = this.maxLengthMessage;
-      this.state = "error";
+      this.message = maxLengthMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * Validates input value min length.
-   *
-   * @returns {boolean}
+   * Validates the min length of the input value.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateMinLength() {
+  _validateMinLength () {
+    const { value, minLength, minLengthMessage } = this;
     if (
-      this.minLength
-      && this.minLength > 1
-      && this.value
-      && this.value.length < this.minLength
+      minLength 
+      && minLength > 1 
+      && value 
+      && value.length < minLength
     ) {
-      this.message = this.minLengthMessage;
-      this.state = "error";
+      this.message = minLengthMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * Validates the max answers required for this control.
-   *
+   * Validates the max answers allowed for this control.
+   * 
    * Only apply this if the value is an array of answers.
-   *
-   * @returns {boolean}
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateMaxAnswers() {
+  _validateMaxAnswers () {
+    const { value, maxAnswers, maxAnswersMessage } = this;
+
+    if (!Array.isArray(value)) return false;
+
     if (
-      this.maxAnswers
-      && this.maxAnswers > 1
-      && this.value
-      && this.value.length > this.maxAnswers
+      maxAnswers 
+      && maxAnswers > 1 
+      && Array.isArray(value)
+      && value.length > maxAnswers
     ) {
-      this.message = this.maxAnswersMessage;
-      this.state = "error";
+      this.message = maxAnswersMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * Validates the min answers required for this control.
-   *
+   * Validates the min answers allowed for this control.
+   * 
    * Only apply this if the value is an array of answers.
-   *
-   * @returns {boolean}
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateMinAnswers() {
+  _validateMinAnswers () {
+    const { value, minAnswers, minAnswersMessage } = this;
+
+    if (!Array.isArray(value)) return false;
+
     if (
-      this.minAnswers
-      && this.minAnswers > 1
-      && this.value
-      && this.value.length < this.minAnswers
+      minAnswers 
+      && minAnswers > 1 
+      && Array.isArray(value)
+      && value.length < minAnswers
     ) {
-      this.message = this.minAnswersMessage;
-      this.state = "error";
+      this.message = minAnswersMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * If the input is of type "email", validate the address.
-   *
-   * @returns {boolean}
+   * Validates an e-mail input type using `@yuigoto/validators`.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateEmail() {
-    if (
-      this.type === "email"
-      && this.value
-      && this.value !== null
-      && !EmailRegex.test(this.value)
-    ) {
-      this.message = this.emailMessage;
-      this.state = "error";
-      return false;
-    }
-    return true;
-  }
+  _validateEmail () {
+    const { type, value, emailMessage } = this;
 
-  validateRegex() {
     if (
-      this.regex
-      && this.regex !== null
-      && this.value
-      && this.value !== null
-      && !this.regex.test(this.value)
+      type === CtrlType.EMAIL
+      && value
+      && !Email.validateAddress(value)
     ) {
-      this.message = this.regexMessage;
-      this.state = "error";
+      this.message = emailMessage;
+      this.state = CtrlStates.ERROR;
       return false;
     }
     return true;
   }
 
   /**
-   * Validates the control if it's declared as a CPF number.
-   *
-   * @returns {boolean}
+   * Validates the input value against the RegExp object, if declared.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validateCpf() {
-    if (this.type === "cpf") {
-      // Instance Cpf
-      let cpf = new Cpf(this.value.trim());
+  _validateRegex () {
+    const { value, regex, regexMessage } = this;
 
-      if (
-        this.value
-        && this.value !== null
-        && !cpf.validate()
-      ) {
-        this.message = this.cpfMessage;
-        this.state = "error";
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * Validates the control if it's declared as a CNPJ number.
-   *
-   * @returns {boolean}
-   */
-  validateCnpj() {
-    if (this.type === "cnpj") {
-      // Instance Cnpj
-      let cnpj = new Cnpj(this.value.trim());
-
-      if (
-        this.value
-        && this.value !== null
-        && !cnpj.validate()
-      ) {
-        this.message = this.cnpjMessage;
-        this.state = "error";
-        return false;
-      }
+    if (
+      regex
+      && value
+      && !regex.test(value)
+    ) {
+      this.message = regexMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
     }
     return true;
   }
 
   /**
-   * Validates the control if it's declared as a PIS/PASEP number.
-   *
-   * @returns {boolean}
+   * Validates a CPF input type using `@yuigoto/validators`.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validatePis() {
-    if (this.type === "pis") {
-      // Instance Pis
-      let pis = new Pis(this.value.trim());
+  _validateCpf () {
+    const { type, value, cpfMessage } = this;
 
-      if (
-        this.value
-        && this.value !== null
-        && !pis.validate()
-      ) {
-        this.message = this.pisMessage;
-        this.state = "error";
-        return false;
-      }
+    if (
+      type === CtrlType.CPF
+      && value !== null
+      && !Cpf.validate(value)
+    ) {
+      this.message = cpfMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
     }
     return true;
   }
 
   /**
-   * Validates this control.
+   * Validates a CNPJ input type using `@yuigoto/validators`.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  validate() {
-    // Set default state and message
-    this.state = "normal";
-    this.message = null;
+  _validateCnpj () {
+    const { type, value, cnpjMessage } = this;
 
-    // Validate
-    return (
-      this.validateRequired()
-      && this.validateMaxLength()
-      && this.validateMinLength()
-      && this.validateMaxAnswers()
-      && this.validateMinAnswers()
-      && this.validateEmail()
-      && this.validateRegex()
-      && this.validateCpf()
-      && this.validateCnpj()
-      && this.validatePis()
-    );
-  }
-
-  /**
-   * Invalidates this control with an error message.
-   *
-   * @param {String} message
-   * @returns {Ctrl}
-   */
-  invalidate(message) {
-    this.state = "error";
-    this.message = message || "Invalid input value provided.";
-    return this;
-  }
-
-  // Interceptors
-  // --------------------------------------------------------------------
-
-  /**
-   * Applies any interceptor that was declared/passed on to this control.
-   *
-   * @param {*} value
-   */
-  applyInterceptors(value) {
-    // Checks interceptor delaration
-    let intercept = this.interceptor || this.interceptors;
-
-    if (intercept && intercept !== null && intercept !== undefined) {
-      try {
-        if (intercept instanceof Array) {
-          for (let func of intercept) {
-            value = func(value);
-          }
-        } else {
-          value = intercept(value);
-        }
-      } catch(err) {
-        console.exception(err, intercept);
-      }
+    if (
+      type === CtrlType.CNPJ
+      && value !== null 
+      && !Cnpj.validate(value)
+    ) {
+      this.message = cnpjMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
     }
-    return value;
-  }
-
-  // Control Lifecycle
-  // --------------------------------------------------------------------
-
-  /**
-   * Fires when the value is modified.
-   *
-   * @param {*} value
-   */
-  onValueChange(value) {
-    this.value = this.applyInterceptors(value);
-    this.message = null;
-    this.state = "normal";
-    if (this.onChange) this.onChange(value);
+    return true;
   }
 
   /**
-   * Fires when a boolean suffers a change.
-   *
-   * @param {Boolean} value
+   * Validates a PIS input type using `@yuigoto/validators`.
+   * 
+   * @returns {Boolean}
+   * @private 
    */
-  onBooleanChange(value) {
-    this.value = !value;
-    this.message = null;
-    this.state = "normal";
-    if (this.onChange) this.onChange(value);
-  }
+  _validatePis () {
+    const { type, value, pisMessage } = this;
 
-  /**
-   * Fires whenever an option is selected on a multi-option control.
-   *
-   * @param {*} value
-   */
-  onValueToggle(value) {
-    // Apply interceptors first
-    value = this.applyInterceptors(value);
-
-    // Execute check
-    let valueArray = this.value;
-    if (!valueArray || !(valueArray instanceof Array)) {
-      valueArray = [];
-      valueArray.push(value);
-    } else {
-      let _idx = valueArray.indexOf(value);
-
-      // Select/deselect
-      if (_idx >= 0) {
-        // Deselect
-        valueArray.splice(_idx, 1);
-      } else {
-        // Select
-        valueArray.push(value);
-      }
+    if (
+      type === CtrlType.PIS
+      && value !== null
+      && !Pis.validate(value)
+    ) {
+      this.message = pisMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
     }
-
-    // Set value and reset state
-    this.value = valueArray;
-    this.message = null;
-    this.state = "normal";
-    if (this.onChange) this.onChange(value);
+    return true;
   }
 
   /**
-   * Checks if the desired option is present/selected on the current value.
+   * Validates a URL type string using `@yuigoto/validators`.
    *
-   * @param {*} option
-   * @returns {boolean}
+   * @returns {Boolean}
+   * @private
    */
-  isValueSelected(option) {
-    let list = this.value();
-    return (
-      list
-      && list instanceof Array
-      && list.indexOf(option) >= 0
-    );
+  _validateUrl () {
+    const { type, value, urlMessage } = this;
+
+    if (
+      type === CtrlType.EMAIL
+      && value !== null
+      && !Email.validate(value)
+    ) {
+      this.message = urlMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Validates a credit card input type using `@yuigoto/validators`.
+   * 
+   * @returns {Boolean}
+   * @private 
+   */
+  _validateCreditCard () {
+    const { type, value, creditCardMessage } = this;
+
+    if (
+      type === CtrlType.CREDIT_CARD
+      && value !== null 
+      && (
+        !CreditCard.validateDigit(value)
+        || !CreditCard.validateModulo(value)
+      )
+    ) {
+      this.message = creditCardMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
+    }
+    return true;
   }
 }
-
-// PropTypes
-// ----------------------------------------------------------------------
-
-Ctrl.defaultProps = {
-  name: null,
-  value: null,
-  options: [],
-  message: null,
-  state: "normal"
-};
-
-Ctrl.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  options: PropTypes.array,
-  state: PropTypes.string,
-  placeholder: PropTypes.string,
-  type: PropTypes.string,
-  custom: PropTypes.bool,
-  custom_class: PropTypes.string,
-  onChange: PropTypes.func,
-
-  interceptor: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.arrayOf(PropTypes.func)
-  ]),
-  interceptors: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.arrayOf(PropTypes.func)
-  ]),
-
-  message: PropTypes.string,
-  emailMessage: PropTypes.string,
-  cpfMessage: PropTypes.string,
-  cnpjMessage: PropTypes.string,
-  pisMessage: PropTypes.string,
-
-  required: PropTypes.bool,
-  requiredMessage: PropTypes.string,
-
-  maxLength: PropTypes.number,
-  maxLengthMessage: PropTypes.string,
-
-  minLength: PropTypes.number,
-  minLengthMessage: PropTypes.string,
-
-  maxAnswers: PropTypes.number,
-  maxAnswersMessage: PropTypes.string,
-
-  minAnswers: PropTypes.number,
-  minAnswersMessage: PropTypes.string,
-
-  regex: PropTypes.instanceOf(RegExp),
-  regexMessage: PropTypes.string,
-
-  cols: PropTypes.number,
-  rows: PropTypes.number
-};
-
-export default Ctrl;

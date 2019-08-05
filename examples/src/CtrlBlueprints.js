@@ -1,21 +1,40 @@
+import { CtrlType } from "../../src";
+
 /**
- * ExampleInputs
+ * ControlBlueprintObject
+ * ----------------------------------------------------------------------
+ * A POJO containing example data for the `Ctrl`/`CtrlCollection` components.
+ *
+ * Targeted towards the Bootstrap 4 renderer.
+ *
+ * @author    Fabio Y. Goto <lab@yuiti.com.br>
+ * @since     0.0.1
+ * @copyright (c) 2018 Fabio Y. Goto
+ * @license   MIT
  */
-export default [
+export const CtrlBlueprints = [
   // Single Line
   {
     required: true,
     name: "name",
-    label: "Nome",
-    type: "text",
+    label: "Single Line Field",
+    type: CtrlType.DEFAULT,
     placeholder: "Type your name..."
+  },
+  // Single Line (Password)
+  {
+    required: true,
+    name: "name",
+    label: "Password",
+    type: CtrlType.PASSWORD,
+    placeholder: "********"
   },
   // Single Line (E-Mail)
   {
     required: true,
     name: "email",
     label: "E-Mail",
-    type: "email",
+    type: CtrlType.EMAIL,
     placeholder: "mail@mail.com"
   },
   // Single Line (Cpf)
@@ -23,7 +42,7 @@ export default [
     required: true,
     name: "cpf",
     label: "CPF",
-    type: "cpf",
+    type: CtrlType.CPF,
     placeholder: "XXX.XXX.XXX-XX"
   },
   // Single Line (Cnpj)
@@ -31,7 +50,7 @@ export default [
     required: true,
     name: "cnpj",
     label: "CNPJ",
-    type: "cnpj",
+    type: CtrlType.CNPJ,
     placeholder: "XX.XXX.XXX/XXXX-XX"
   },
   // Single Line (Pis)
@@ -39,15 +58,23 @@ export default [
     required: true,
     name: "pis",
     label: "PIS/PASEP",
-    type: "pis",
+    type: CtrlType.PIS,
     placeholder: "XX.XXXXX.XXX-X"
+  },
+  // Single Line (URL)
+  {
+    required: true,
+    name: "url",
+    label: "URL",
+    type: CtrlType.URL,
+    placeholder: "http://..."
   },
   // Textarea
   {
     required: true,
     name: "message",
-    label: "Textarea Field",
-    type: "textarea",
+    label: "Textarea",
+    type: CtrlType.TEXTAREA,
     placeholder: "Write your story...",
     cols: 30,
     rows: 8
@@ -57,7 +84,7 @@ export default [
     required: true,
     name: "radio_default",
     label: "Options",
-    type: "radio_group",
+    type: CtrlType.RADIO_GROUP,
     options: [
       {
         value: 1,
@@ -86,7 +113,7 @@ export default [
     required: true,
     name: "radio_inline",
     label: "Options (Inline)",
-    type: "radio_group",
+    type: CtrlType.RADIO_GROUP,
     options: [
       {
         inline: true,
@@ -118,8 +145,8 @@ export default [
   {
     required: true,
     name: "checkbox_default",
-    label: "Options",
-    type: "checkbox_group",
+    label: "Checkboxes",
+    type: CtrlType.CHECKBOX_GROUP,
     options: [
       {
         value: 1,
@@ -148,7 +175,7 @@ export default [
     required: true,
     name: "checkbox_inline",
     label: "Checkboxes (Inline)",
-    type: "checkbox_group",
+    type: CtrlType.CHECKBOX_GROUP,
     options: [
       {
         inline: true,
@@ -180,20 +207,20 @@ export default [
   {
     name: "boolean",
     label: "Boolean Input",
-    type: "boolean"
+    type: CtrlType.BOOLEAN
   },
   // Custom Boolean
   {
     name: "boolean_custom",
     label: "Boolean Input (Custom)",
-    type: "boolean",
+    type: CtrlType.BOOLEAN,
     custom: true
   },
   // Dropdown
   {
     name: "dropdown",
     label: "Dropdown Selector",
-    type: "dropdown",
+    type: CtrlType.DROPDOWN,
     required: true,
     options: [
       {
@@ -217,8 +244,8 @@ export default [
   // Dropdown (Custom)
   {
     name: "dropdown_custom",
-    label: "Dropdown Selector",
-    type: "dropdown",
+    label: "Dropdown Selector (Custom)",
+    type: CtrlType.DROPDOWN,
     custom: true,
     required: true,
     options: [
