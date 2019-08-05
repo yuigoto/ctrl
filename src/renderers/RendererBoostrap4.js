@@ -5,7 +5,7 @@ import classnames from "classnames";
 import { Ctrl } from "../ctrl/Ctrl";
 import { CtrlCollection } from "../ctrl/CtrlCollection";
 import { CtrlStates } from "../ctrl/CtrlStates";
-import {CtrlType} from "..";
+import { CtrlType } from "../ctrl/CtrlType";
 
 /**
  * Renderers/RendererBootstrap4
