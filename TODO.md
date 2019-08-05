@@ -5,7 +5,7 @@ TODO
 
 - Better documentation;
 - Cleanup and optimizations;
-- More renderers;
+- More renderers (or decoupling renderers);
 
 ## `RendererBootstrap4`
 

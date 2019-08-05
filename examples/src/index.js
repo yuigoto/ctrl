@@ -1,92 +1,79 @@
 import React, { Component } from "react";
 import { render } from "react-dom";
-import CtrlCollection from "ctrl/CtrlCollection";
-import RendererBootstrap4 from "renderers/RendererBootstrap4";
-import ControlBlueprintObject from "./ControlBlueprintObject";
+
+import { Ctrl, CtrlCollection, RendererBootstrap4 } from "../../src";
+import { CtrlBlueprints } from "./CtrlBlueprints";
 
 class App extends Component {
   /**
-   * App constructor.
-   *
-   * @param {*} props
+   * @type {CtrlCollection}
    */
-  constructor(props) {
+  controls;
+
+  constructor (props) {
     super(props);
 
-    // Build control collection
-    this.controlCollection = new CtrlCollection();
-    for (let control of ControlBlueprintObject) {
-      this.controlCollection.add(control);
+    this.state = {};
+
+    this.controls = new CtrlCollection();
+    for (let control of CtrlBlueprints) {
+      this.controls.add(control);
     }
 
-    // Binding
     this.onSubmitForm = this.onSubmitForm.bind(this);
   }
 
-  // Methods
-  // --------------------------------------------------------------------
-
   /**
-   * Submit event callback.
    *
-   * @param event
+   * @param {Event} event
    */
-  onSubmitForm(event) {
+  onSubmitForm (event) {
     event.preventDefault();
 
-    let { controlCollection } = this;
+    let { controls } = this;
 
-    // Logs to object
-    console.log(controlCollection.toObject());
+    // Log object
+    console.log(controls.toObject());
 
-    if (!controlCollection.validate()) {
+    if (!controls.validate()) {
       this.forceUpdate();
-      return;
     }
   }
 
-  // React Lifecycle
-  // --------------------------------------------------------------------
-
-  render() {
+  render () {
     return (
-      <div className={"p-5"}>
+      <div className={"container py-5"}>
         <h1 className={"display-4"}>
-          Ctrl <small className={"font-weight-light text-muted"}>: example page</small>
+          <code>
+            @yuigoto/ctrl
+          </code>
         </h1>
+
+        <p className={"text-muted lead"}>
+          <code>Ctrl</code> is a multi-purpose controlled component, mainly for use with React, mostly useful for HTML inputs and forms.
+        </p>
+
+        <form onSubmit={this.onSubmitForm}>
+          {RendererBootstrap4.renderCollection(this.controls)}
+
+          <button type={"submit"} className={"btn btn-success"}>
+            Submit 😉
+          </button>
+        </form>
+
+        <hr/>
 
         <p>
           <small>
             by Fabio Y. Goto (<a href="mailto:lab@yuiti.com.br">lab@yuiti.com.br</a>)
           </small>
         </p>
-
-        <p className={"text-muted lead"}>
-          <code>Ctrl</code> is a multi-purpose controlled component, mainly for use with React, mostly useful for HTML inputs and forms. It is an expanded fork of <code>Xcontrol</code>, originally built by Rodrigo Portela (<a href={"https://github.com/rportela"} target={"_blank"}>@rportela</a>).
-        </p>
-
-        <p>It basically works by creating <em>blueprints</em> (POJO) with specification for controls, which are then passed onto a <code>Ctrl</code> or <code>CtrlCollection</code> object, which will add validation and parsing capabilities to them.</p>
-
-        <p>The single controls or the collection are, then, passed to a renderer component, for display and use. The examples in this page uses the `Bootstrap4Renderer` example component, but you're free to develop or expand on your own.</p>
-
-        <p>It hasn't been tested yet, but the "raw" controls might be used with other libraries. Even though its primary target is <strong>React</strong>.</p>
-
-        <hr/>
-
-        <h3>Example form built with the components.</h3>
-
-        <form onSubmit={this.onSubmitForm}>
-          {RendererBootstrap4.renderCollection(this.controlCollection)}
-
-          <hr/>
-
-          <button type={"submit"} className={"btn btn-success"}>
-            Enviar ✌
-          </button>
-        </form>
       </div>
     );
   }
 }
 
-render(<App/>, document.getElementById("root"));
+render(
+  <App/>,
+  document.getElementById("root")
+);

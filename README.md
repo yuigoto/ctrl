@@ -5,7 +5,7 @@
 
 Provides classes to manage single controls, control collections and, also, handle rendering of HTML inputs.
 
-Its main use is for rendering forms with React.
+Contains an example component renderer for Bootstrap 4, with a React target.
 
 Install it with:
 
@@ -36,4 +36,4 @@ See `AUTHORS.md`.
 
 -----
 
-_(c)2018 Fabio Y. Goto_
+_(c)2019 Fabio Y. Goto_

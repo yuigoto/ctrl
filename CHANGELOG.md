@@ -1,6 +1,12 @@
 Changelog
 =========
 
+### 0.2.0
+
+_05/Aug/2019_
+
+Decoupled some of validation to `@yuigoto/validators`, added more input options and started decoupling renderers, to truly make it generic.
+
 ### 0.1.1
 
 _16/Oct/2018_

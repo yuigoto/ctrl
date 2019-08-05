@@ -1,121 +1,87 @@
-// Dependencies
-import React from "react";
-import PropTypes from "prop-types";
-
-// Project import
-import Ctrl from "./Ctrl";
+import { Ctrl } from "./Ctrl";
 
 /**
- * Ctrl\CtrlCollection
+ * Ctrl/CtrlCollection
  * ----------------------------------------------------------------------
- * Represents a `Ctrl` collection, useful for managing sets of controls for
- * forms or other uses.
- *
- * Requires `Ctrl`.
- *
- * Expanded fork of Rodrigo Portela's `XcontrolCollection`.
- *
- * @author    Fabio Y. Goto <lab@yuiti.com.br>
- * @since     0.0.1
- * @copyright (c) 2018 Fabio Y. Goto
- * @license   MIT
+ * Provides an easy way to manage groups of `Ctrl` instances for forms or 
+ * other uses.
+ * 
+ * @since 0.0.1
  */
-class CtrlCollection {
-  // Properties
+export class CtrlCollection {
+  // Public Properties
   // --------------------------------------------------------------------
 
   /**
-   * Holds all controls.
-   *
-   * @type {Array}
+   * Stores all control objects for the current collection.
+   * 
+   * @type {Array<Ctrl>}
    */
   controls;
-
-  // Constructor
+  
+  // Lifecycle
   // --------------------------------------------------------------------
 
   /**
-   * CtrlCollection constructor.
+   * Class constructor.
    */
   constructor() {
-    // Set initial state
     this.controls = [];
   }
 
-  // Methods
+  // Public Methods
   // --------------------------------------------------------------------
 
   /**
-   * Returns an object containing all values from the controls.
-   *
-   * @param {*} target
-   */
-  toObject(target) {
-    if (!target || target === null || target === undefined) {
-      target = {};
-    }
-
-    // Assign the values
-    for (let ctrl of this.controls) {
-      if (
-        ctrl.value
-        && ctrl.value !== null
-        && ctrl.value !== undefined
-      ) {
-        target[ctrl.name] = ctrl.value;
-      }
-    }
-
-    return target;
-  }
-
-  // Control Management
-  // --------------------------------------------------------------------
-
-  /**
-   * Creates a new controller with the arguments provided and pushes it
-   * into the collection.
-   *
-   * Accepted arguments include:
-   * - TODO: List of arguments...
-   *
-   * @param {Object} control_args
+   * Adds a `Ctrl` instance to the collection or creates one if an object with 
+   * the proper arguments is provided.
+   * 
+   * @param {Ctrl|Object} controlArgs 
+   *     `Ctrl` instance or object with props for creating one 
    * @return {CtrlCollection}
    */
-  add(control_args) {
-    if (!control_args || control_args === null || control_args === undefined) {
+  add (controlArgs) {
+    if (!controlArgs || controlArgs === null || controlArgs === undefined) {
       console.error(
-        "Please provide valid control arguments."
+        "Please provide a valid `Ctrl` instance or arguments to create one."
       );
-      return this;
     }
 
-    // No unnamed controls
+    if (controlArgs instanceof Ctrl) {
+      this.controls.push(controlArgs);
+    }
+
     if (
-      !control_args.name
-      || control_args.name === null
-      || control_args.name === ""
-      || control_args.name === undefined
+      typeof controlArgs === "object"
+      && (
+        !controlArgs.hasOwnProperty("name") 
+        || controlArgs.name === null 
+        || controlArgs.name === undefined 
+        || controlArgs.name === ""
+      )
     ) {
       console.error(
-        "The 'name' property is required for every control."
+        "The `name` property is required for every `Ctrl` instance."
       );
-      return this;
+    } else {
+      this.controls.push(
+        new Ctrl(controlArgs) 
+      );
     }
-
-    // Adds the control to the array
-    this.controls.push(new Ctrl(control_args));
 
     return this;
   }
 
   /**
    * Retrieves a control from the collection.
-   *
-   * @param {String} name
+   * 
+   * Returns `false` if no control is found.
+   * 
+   * @param {String} name 
+   *     Control `name` attribute 
    * @returns {Ctrl|Boolean}
    */
-  get(name) {
+  get (name) {
     for (let control of this.controls) {
       if (name === control.name) return control;
     }
@@ -123,13 +89,28 @@ class CtrlCollection {
   }
 
   /**
-   * Used to update/change/set a control in the collection with a new
-   * instance.
-   *
-   * @param {Ctrl} control
-   * @return {CtrlCollection}
+   * Retrieves a control's value from the collection.
+   * 
+   * Returns `undefined` if no control is found.
+   * 
+   * @param {String} name 
+   *     Control `name` attribute 
+   * @returns {*|Boolean}
    */
-  set(control) {
+  getValue (name) {
+    let ctrl = this.get(name);
+    return (ctrl && ctrl !== false) ? ctrl.value : undefined;
+  }
+
+  /**
+   * Defines/updates/changes a control in the collection, just provide a valid 
+   * `Ctrl` instance and the method does the merging/overriding or setting.
+   * 
+   * @param {Ctrl} control 
+   *     Control instance to add/update 
+   * @returns {CtrlCollection}
+   */
+  set (control) {
     let name = control.name;
 
     for (let i in this.controls) {
@@ -144,16 +125,40 @@ class CtrlCollection {
   }
 
   /**
+   * Sets the value only for a single control.
+   * 
+   * @param {String} name 
+   *     Name of the control 
+   * @param {*} value 
+   *     Value to be set 
+   * @returns {CtrlCollection}
+   */
+  setValue (name, value) {
+    let ctrl = this.get(name);
+
+    if (ctrl && ctrl !== false) {
+      ctrl.value = value;
+      this.set(ctrl);
+    } else {
+      console.exception(
+        `Control with the name '${name}' not found on this collection.`
+      );
+    }
+
+    return this;
+  }
+
+  /**
    * Removes a control from the collection.
-   *
-   * @param {String} name
+   * 
+   * @param {String} name 
+   *     Control name 
    * @return {CtrlCollection}
    */
-  remove(name) {
+  remove (name) {
     for (let i in this.controls) {
       if (name === this.controls[i].name) {
         this.controls.splice(i, 1);
-        return this;
       }
     }
 
@@ -161,90 +166,80 @@ class CtrlCollection {
   }
 
   /**
-   * Validates this control set.
-   *
-   * @returns {boolean}
+   * Validates this control collection.
+   * 
+   * @returns {Boolean}
    */
-  validate() {
-    let isValid = true;
+  validate () {
+    let _valid = true;
 
     for (let i in this.controls) {
-      isValid = this.controls[i].validate() && isValid;
+      _valid = this.controls[i].validate() && _valid;
     }
 
-    return isValid;
+    return _valid;
   }
 
   /**
-   * Invalidates a single control in this collection.
-   *
-   * @param {String} name
-   * @param {String} message
-   * @returns {boolean}
+   * 
+   * @param {String} name 
+   *     Control name to invalidate  
+   * @param {String} message 
+   *     Message to be set as error message 
+   * @returns {CtrlCollection}
    */
-  invalidate(name, message) {
+  invalidate (name, message) {
     let ctrl = this.get(name);
-    return (ctrl && ctrl !== null && ctrl !== undefined)
-      ? ctrl.invalidate(message) !== null
-      : false;
+    if (ctrl && ctrl !== false) ctrl.invalidate(message);
+    return this;
   }
 
   /**
-   * Invalidates all controls in this collection.
-   *
+   * Invalidates ALL controls in this collection.
+   * 
    * USE WITH CARE!
+   * 
+   * @returns {CtrlCollection}
    */
-  invalidateAll() {
+  invalidateAll () {
     for (let i in this.controls) {
       this.controls[i].invalidate();
     }
-    console.log(this.controls);
-  }
 
-  // Value Getter/Setter
-  // --------------------------------------------------------------------
-
-  /**
-   * Retrieves the value of a single control.
-   *
-   * @param {String} name
-   * @returns {*}
-   */
-  getValue(name) {
-    let ctrl = this.get(name);
-    return (ctrl && ctrl !== null && ctrl !== undefined)
-      ? ctrl.value : undefined;
+    return this;
   }
 
   /**
-   * Sets the value of a single control.
-   *
-   * @param {String} name
-   * @param {String} value
+   * Overrides the default `toString()` method.
+   * 
+   * @returns {String}
    */
-  setValue(name, value) {
-    let ctrl = this.get(name);
+  toString () {
+    return "[object CtrlCollection]";
+  }
 
-    if (ctrl && ctrl !== null && ctrl !== undefined) {
-      ctrl.value = value;
-      return true;
+  /**
+   * `toJSON()` alias, for compatibility.
+   * 
+   * @returns {Object}
+   */
+  toObject () {
+    return this.toJSON();
+  }
+
+  /**
+   * Overrides the default `toJSON()` method, returns a single object with 
+   * key/value pairs of the collection's names and values.
+   * 
+   * @returns {Object}
+   */
+  toJSON () {
+    let _object = {};
+
+    for (let ctrl of this.controls) {
+      _object[ctrl.name] = ctrl.value;
     }
 
-    return false;
+    return _object;
   }
 }
-
-// PropTypes
-// ----------------------------------------------------------------------
-
-CtrlCollection.defaultProps = {
-  controls: []
-};
-
-CtrlCollection.propTypes = {
-  controls: PropTypes.arrayOf(
-    PropTypes.instanceOf(Ctrl)
-  )
-};
-
-export default CtrlCollection;
