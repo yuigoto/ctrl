@@ -509,13 +509,10 @@ export class Ctrl {
    */
   validate () {
     this.resetState();
+    console.log(this.type);
 
     return (
       this._validateRequired() 
-      && this._validateMaxLength() 
-      && this._validateMinLength() 
-      && this._validateMaxAnswers() 
-      && this._validateMinAnswers() 
       && this._validateEmail() 
       && this._validateRegex() 
       && this._validateCpf() 
@@ -523,6 +520,10 @@ export class Ctrl {
       && this._validatePis()
       && this._validateUrl()
       && this._validateCreditCard()
+      && this._validateMaxLength() 
+      && this._validateMinLength() 
+      && this._validateMaxAnswers() 
+      && this._validateMinAnswers() 
     );
   }
 
@@ -740,8 +741,6 @@ export class Ctrl {
   _validateMaxAnswers () {
     const { value, maxAnswers, maxAnswersMessage } = this;
 
-    if (!Array.isArray(value)) return false;
-
     if (
       maxAnswers 
       && maxAnswers > 1 
@@ -765,8 +764,6 @@ export class Ctrl {
    */
   _validateMinAnswers () {
     const { value, minAnswers, minAnswersMessage } = this;
-
-    if (!Array.isArray(value)) return false;
 
     if (
       minAnswers 
@@ -832,6 +829,8 @@ export class Ctrl {
   _validateCpf () {
     const { type, value, cpfMessage } = this;
 
+    console.log("É CPF!");
+
     if (
       type === CtrlType.CPF
       && value !== null
@@ -852,6 +851,8 @@ export class Ctrl {
    */
   _validateCnpj () {
     const { type, value, cnpjMessage } = this;
+
+    console.log("É CNPJ!");
 
     if (
       type === CtrlType.CNPJ
