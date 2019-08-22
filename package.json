@@ -1,6 +1,6 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Generic, multi-purpose control class, mostly useful for html inputs.",
   "main": "dist/index.js",
   "publishConfig": {
@@ -39,7 +39,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.5.5",
-    "@yuigoto/validators": "^0.2.1",
+    "@yuigoto/validators": "^0.2.2",
     "babel-loader": "^8.0.6",
     "babel-plugin-module-resolver": "^3.2.0",
     "css-loader": "^3.1.0",
