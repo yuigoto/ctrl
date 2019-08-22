@@ -1,4 +1,4 @@
-import { Cpf, Cnpj, Pis, Email, CreditCard } from "@yuigoto/validators";
+import { Cpf, Cnpj, Pis, Email, CreditCard, Url } from "@yuigoto/validators";
 
 import { CtrlType } from "./CtrlType";
 import { CtrlStates } from "./CtrlStates";
@@ -509,7 +509,6 @@ export class Ctrl {
    */
   validate () {
     this.resetState();
-    console.log(this.type);
 
     return (
       this._validateRequired() 
@@ -829,8 +828,6 @@ export class Ctrl {
   _validateCpf () {
     const { type, value, cpfMessage } = this;
 
-    console.log("É CPF!");
-
     if (
       type === CtrlType.CPF
       && value !== null
@@ -851,8 +848,6 @@ export class Ctrl {
    */
   _validateCnpj () {
     const { type, value, cnpjMessage } = this;
-
-    console.log("É CNPJ!");
 
     if (
       type === CtrlType.CNPJ
@@ -897,9 +892,9 @@ export class Ctrl {
     const { type, value, urlMessage } = this;
 
     if (
-      type === CtrlType.EMAIL
+      type === CtrlType.URL
       && value !== null
-      && !Email.validate(value)
+      && !Url.validate(value)
     ) {
       this.message = urlMessage;
       this.state = CtrlStates.ERROR;
