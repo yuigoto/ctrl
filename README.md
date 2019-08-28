@@ -13,12 +13,12 @@ Install it with:
 
 -----
 
-Todo
-----
+Documentation
+-------------
 
-> Description coming on future commits.
+Ongoing documentation being handled on the [**wiki**](https://github.com/yuigoto/ctrl/wiki).
 
-See `TODO.md`.
+As of now, only the basic classes, and not the renderer, are documented, since I expect to decouple renderers from the control abstractions.
 
 -----
 
