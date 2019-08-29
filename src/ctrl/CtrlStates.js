@@ -1,9 +1,9 @@
 /**
  * Ctrl/CtrlStates
  * ----------------------------------------------------------------------
- * Simple enum-like object with key/value paires representing a control's 
+ * Simple enum-like object with key/value pairs representing a control's
  * basic states.
- * 
+ *
  * @since 0.2.0
  * @type {Object}
  */

@@ -1,9 +1,9 @@
 /**
  * Ctrl
  * ----------------------------------------------------------------------
- * Provides generic, multi-purpose control class, mostly useful for html 
+ * Provides generic, multi-purpose control class, mostly useful for html
  * inputs and managing forms.
- * 
+ *
  * @author Fabio Y. Goto <lab@yuiti.dev>
  * @license MIT
  * @since 0.0.1

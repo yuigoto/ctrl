@@ -12,12 +12,11 @@ import { CtrlType } from "../../src";
  * @copyright (c) 2018 Fabio Y. Goto
  * @license   MIT
  */
-export const CtrlBlueprints = [
+export const CollectionBlueprints = [
   // Single Line
   {
     required: true,
     name: "name",
-    altName: "nombre",
     label: "Single Line Field",
     type: CtrlType.DEFAULT,
     placeholder: "Type your name..."
@@ -34,34 +33,41 @@ export const CtrlBlueprints = [
   {
     required: true,
     name: "email",
-    altName: "mailo",
     label: "E-Mail",
     type: CtrlType.EMAIL,
     placeholder: "mail@mail.com"
   },
-  // Single Line (Cpf)
   {
-    required: true,
-    name: "cpf",
-    label: "CPF",
-    type: CtrlType.CPF,
-    placeholder: "XXX.XXX.XXX-XX"
-  },
-  // Single Line (Cnpj)
-  {
-    required: true,
-    name: "cnpj",
-    label: "CNPJ",
-    type: CtrlType.CNPJ,
-    placeholder: "XX.XXX.XXX/XXXX-XX"
-  },
-  // Single Line (Pis)
-  {
-    required: true,
-    name: "pis",
-    label: "PIS/PASEP",
-    type: CtrlType.PIS,
-    placeholder: "XX.XXXXX.XXX-X"
+    name: "collected",
+    children: [
+      // Single Line (Cpf)
+      {
+        required: true,
+        name: "cpf",
+        label: "CPF",
+        type: CtrlType.CPF,
+        placeholder: "XXX.XXX.XXX-XX",
+        wrapClass: "col-4"
+      },
+      // Single Line (Cnpj)
+      {
+        required: true,
+        name: "cnpj",
+        label: "CNPJ",
+        type: CtrlType.CNPJ,
+        placeholder: "XX.XXX.XXX/XXXX-XX",
+        wrapClass: "col-4"
+      },
+      // Single Line (Pis)
+      {
+        required: true,
+        name: "pis",
+        label: "PIS/PASEP",
+        type: CtrlType.PIS,
+        placeholder: "XX.XXXXX.XXX-X",
+        wrapClass: "col-4"
+      }
+    ]
   },
   // Single Line (URL)
   {

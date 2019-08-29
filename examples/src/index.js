@@ -3,12 +3,15 @@ import { render } from "react-dom";
 
 import { Ctrl, CtrlCollection, RendererBootstrap4 } from "../../src";
 import { CtrlBlueprints } from "./CtrlBlueprints";
+import { CollectionBlueprints } from "./CollectionBlueprints";
 
 class App extends Component {
   /**
    * @type {CtrlCollection}
    */
   controls;
+
+  xtndControls;
 
   constructor (props) {
     super(props);
@@ -18,6 +21,22 @@ class App extends Component {
     this.controls = new CtrlCollection();
     for (let control of CtrlBlueprints) {
       this.controls.add(control);
+    }
+
+    this.xtndControls = new CtrlCollection();
+    this.xtndControls.name = "Hello";
+    for (let control of CollectionBlueprints) {
+      if (control.hasOwnProperty("children")) {
+        let tempControl = new CtrlCollection(control.name);
+
+        for (let item of control.children) {
+          tempControl.add(item);
+        }
+
+        this.xtndControls.add(tempControl);
+      } else {
+        this.xtndControls.add(control);
+      }
     }
 
     this.onSubmitForm = this.onSubmitForm.bind(this);
@@ -33,7 +52,7 @@ class App extends Component {
     let { controls } = this;
 
     // Log object
-    console.log(controls.toObject());
+    console.log(controls.toObject(true));
 
     if (!controls.validate()) {
       this.forceUpdate();
@@ -54,7 +73,16 @@ class App extends Component {
         </p>
 
         <form onSubmit={this.onSubmitForm}>
+
+          {RendererBootstrap4.renderCollection(this.xtndControls)}
+
+          <hr/>
+          <hr/>
+          
           {RendererBootstrap4.renderCollection(this.controls)}
+
+          <hr/>
+          <hr/>
 
           <button type={"submit"} className={"btn btn-success"}>
             Submit 😉

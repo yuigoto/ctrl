@@ -7,7 +7,7 @@ import { CtrlStates } from "./CtrlStates";
  * Ctrl/Ctrl
  * ----------------------------------------------------------------------
  * Multi-purpose control class, mostly useful for HTML inputs.
- * 
+ *
  * @since 0.0.1
  */
 export class Ctrl {
@@ -16,21 +16,28 @@ export class Ctrl {
 
   /**
    * Control name.
-   * 
+   *
    * @type {String}
    */
   name;
 
   /**
+   * Control alternate name, used in some renderers.
+   *
+   * @type {String}
+   */
+  altName;
+
+  /**
    * Control label, must be a human-readable string.
-   * 
+   *
    * @type {String}
    */
   label;
 
   /**
    * Control value.
-   * 
+   *
    * @type {*}
    */
   value;
@@ -47,194 +54,199 @@ export class Ctrl {
    * - `CtrlType.SINGLE_OPTION`
    * - `CtrlType.MULTIPLE_OPTION`
    * - `CtrlType.DROPDOWN`
-   * 
+   *
    * @type {Array}
    */
   options;
 
   /**
    * Control state, based on `CtrlStates`.
-   * 
+   *
    * @type {Number}
    */
   state;
 
   /**
    * Human-readable placeholder text for fields.
-   * 
+   *
    * @type {String}
    */
   placeholder;
 
   /**
    * Control type, determines how the control behaves and works.
-   * 
+   *
    * Based on `CtrlType`.
-   * 
+   *
    * @type {Number}
    */
   type;
 
   /**
-   * Custom flag, to add compatibility with the `CtrlBS4Renderer` custom 
+   * Custom flag, to add compatibility with the `CtrlBS4Renderer` custom
    * radio and checkbox inputs.
-   * 
+   *
    * @type {Boolean}
    */
   custom;
 
   /**
    * Custom CSS class to be applied on the input (or anything the renderer uses).
-   * 
+   *
    * @type {String}
    */
   customClass;
 
   /**
+   * Custom CSS class to be applied on the control's wrapper, if necessary.
+   */
+  wrapClass;
+
+  /**
    * `onChange` callable function, must accept the control value as input.
-   * 
+   *
    * @type {Function}
    */
   onChange;
 
   /**
-   * Callable function or array of callable functions that are applied to the 
+   * Callable function or array of callable functions that are applied to the
    * control's value during validation/processing.
-   * 
+   *
    * Callables should accept the control value and return the modified input.
-   * 
-   * @type {Array|Function} 
+   *
+   * @type {Array|Function}
    */
   _interceptor;
 
   /**
    * Control message, usually display the status messages.
-   * 
+   *
    * @type {String}
    */
   message;
 
   /**
    * Control required status.
-   * 
+   *
    * @type {Boolean}
    */
   required;
 
   /**
    * Control required status message.
-   * 
+   *
    * @type {String}
    */
   requiredMessage;
 
   /**
    * Max input length.
-   * 
+   *
    * @type {Number}
    */
   maxLength;
 
   /**
    * Max input length validation message.
-   * 
+   *
    * @type {String}
    */
   maxLengthMessage;
-  
+
   /**
    * Min input length.
-   * 
+   *
    * @type {Number}
    */
   minLength;
-  
+
   /**
    * Min input length validation message.
-   * 
+   *
    * @type {String}
    */
   minLengthMessage;
 
   /**
    * Max answers accepted, when using the `CtrlType.MULTIPLE_OPTION` input.
-   * 
+   *
    * @type {Number}
    */
   maxAnswers;
 
   /**
    * Max answers validation message.
-   * 
+   *
    * @type {String}
    */
   maxAnswersMessage;
 
   /**
    * Min answers accepted, when using the `CtrlType.MULTIPLE_OPTION` input.
-   * 
+   *
    * @type {Number}
    */
   minAnswers;
 
   /**
    * Min answers validation message.
-   * 
+   *
    * @type {String}
    */
   minAnswersMessage;
 
   /**
    * RegExp object used to validate the input.
-   * 
+   *
    * @type {RegExp}
    */
   regex;
 
   /**
    * RegExp validation message.
-   * 
+   *
    * @type {String}
    */
   regexMessage;
 
   /**
    * Brazilian Legal Entity Document (CNPJ) number validation message.
-   * 
+   *
    * Exclusive for the `CtrlTypes.CNPJ` input type.
-   * 
+   *
    * @type {String}
    */
   cnpjMessage;
 
   /**
    * Brazilian Natural Person Registry (CPF) number validation message.
-   * 
+   *
    * Exclusive for the `CtrlTypes.CPF` input type.
-   * 
+   *
    * @type {String}
    */
   cpfMessage;
 
   /**
    * Brazilian Social Integration Program (PIS) number validation message.
-   * 
+   *
    * Exclusive for the `CtrlTypes.PIS` input type.
-   * 
+   *
    * @type {String}
    */
   pisMessage;
 
   /**
    * Credit card number validation message.
-   * 
+   *
    * Exclusive for the `CtrlTypes.CREDIT_CARD` input type.
    */
   creditCardMessage;
 
   /**
    * E-mail address validation message.
-   * 
+   *
    * Exclusive for the `CtrlTypes.EMAIL` input type.
    */
   emailMessage;
@@ -248,14 +260,14 @@ export class Ctrl {
 
   /**
    * `CtrlType.TEXTAREA` type input column limit.
-   * 
+   *
    * @type {Number}
    */
   cols;
 
   /**
    * `CtrlType.TEXTAREA` type input row limit.
-   * 
+   *
    * @type {Number}
    */
   rows;
@@ -265,8 +277,8 @@ export class Ctrl {
 
   /**
    * Constructor.
-   * 
-   * @param {Object} props 
+   *
+   * @param {Object} props
    *     Object containing key/value pairs mirroring the control properties
    */
   constructor (props) {
@@ -278,11 +290,14 @@ export class Ctrl {
       // Checkbox/multiple options must have an array-based value
       props.value = [];
     }
-    
+
     // Map props to properties
     Object.keys(props).map((key) => {
       this[key] = props[key];
     });
+
+    // Intercept values on load to avoid problems
+    this.value = this.applyInterceptors(this.value);
   }
 
   /**
@@ -313,40 +328,41 @@ export class Ctrl {
         return "password";
       case CtrlType.EMAIL:
         return "email";
+      case CtrlType.DATE:
       default:
         return "text";
     }
   }
 
   /**
-   * Checks if the desired option is currently selected/present on the 
+   * Checks if the desired option is currently selected/present on the
    * value array.
-   * 
+   *
    * Works only for multi-option type inputs.
-   * 
+   *
    * Must be fired on the renderer.
-   * 
-   * @param {*} option 
-  *      Single option to test for 
-  * @returns {Boolean}
+   *
+   * @param {*} option
+   *      Single option to test for
+   * @returns {Boolean}
    */
   isValueSelected (option) {
     const { value } = this;
 
     return (
-      value 
-      && value instanceof Array 
+      value
+      && value instanceof Array
       && value.indexOf(option) >= 0
     );
   }
 
   /**
    * Fires when a boolean type input suffers change/toggle.
-   * 
+   *
    * Must be fired on the renderer.
-   * 
-   * @param {Boolean} value 
-   *      Value to toggle 
+   *
+   * @param {Boolean} value
+   *      Value to toggle
    */
   onBooleanChange (value) {
     this.value = !value;
@@ -356,10 +372,10 @@ export class Ctrl {
 
   /**
    * Fires when the value is modified.
-   * 
+   *
    * Must be fired on the renderer.
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    *     Value to update
    */
   onValueChange (value) {
@@ -371,13 +387,13 @@ export class Ctrl {
   /**
    * Fires when a single option is checked/unchecked on a multi-option
    * input type.
-   * 
+   *
    * Must be executed individually on each check.
-   * 
+   *
    * Must be fired on the renderer.
-   * 
-   * @param {*} value 
-   *     Value to toggle 
+   *
+   * @param {*} value
+   *     Value to toggle
    */
   onValueToggle (value) {
     value = this.applyInterceptors(value);
@@ -413,11 +429,11 @@ export class Ctrl {
   // --------------------------------------------------------------------
 
   /**
-   * Callable function or array of callable functions that are applied to the 
+   * Callable function or array of callable functions that are applied to the
    * control's value during validation/processing.
-   * 
+   *
    * Callables should accept the control value and return the modified input.
-   * 
+   *
    * @type {Array|Function}
    */
   get interceptor () {
@@ -430,7 +446,7 @@ export class Ctrl {
 
   /**
    * Alias for `interceptor`.
-   * 
+   *
    * @type {Array|Function}
    */
   get interceptors () {
@@ -446,8 +462,8 @@ export class Ctrl {
 
   /**
    * Applies any interceptor declared for the current control on its value.
-   * 
-   * @param {*} value 
+   *
+   * @param {*} value
    *     Value to be intercepted
    * @returns {*}
    */
@@ -472,12 +488,12 @@ export class Ctrl {
   }
 
   /**
-   * Invalidates this control with an error message, may be used to override 
+   * Invalidates this control with an error message, may be used to override
    * the current message set.
-   * 
-   * @param {String} message 
-   *     Message to set for invalidation 
-   * @returns {Ctrl} 
+   *
+   * @param {String} message
+   *     Message to set for invalidation
+   * @returns {Ctrl}
    */
   invalidate (message) {
     this.state = CtrlStates.ERROR;
@@ -487,17 +503,17 @@ export class Ctrl {
 
   /**
    * Removes non-digit characters from a string.
-   * 
+   *
    * IMPORTANT:
    * Might break float values!
-   * 
-   * @param {String|Number} value 
-   *     Value to be sanitized 
-   * @returns {String} 
+   *
+   * @param {String|Number} value
+   *     Value to be sanitized
+   * @returns {String}
    */
   sanitizeToNumbersOnly (value) {
     if (typeof value !== "number" || typeof value !== "string") return "";
-    value = (typeof value !== "number") 
+    value = (typeof value !== "number")
       ? value.trim().replace(/\D/g, "")
       : value.toString();
 
@@ -511,24 +527,24 @@ export class Ctrl {
     this.resetState();
 
     return (
-      this._validateRequired() 
-      && this._validateEmail() 
-      && this._validateRegex() 
-      && this._validateCpf() 
-      && this._validateCnpj() 
+      this._validateRequired()
+      && this._validateEmail()
+      && this._validateRegex()
+      && this._validateCpf()
+      && this._validateCnpj()
       && this._validatePis()
       && this._validateUrl()
       && this._validateCreditCard()
-      && this._validateMaxLength() 
-      && this._validateMinLength() 
-      && this._validateMaxAnswers() 
-      && this._validateMinAnswers() 
+      && this._validateMaxLength()
+      && this._validateMinLength()
+      && this._validateMaxAnswers()
+      && this._validateMinAnswers()
     );
   }
 
   /**
    * Overrides the default `toString()` method.
-   * 
+   *
    * @returns {String}
    */
   toString () {
@@ -536,28 +552,30 @@ export class Ctrl {
   }
 
   /**
-   * Overrides the default `toJSON()` method, returns a single object with 
+   * Overrides the default `toJSON()` method, returns a single object with
    * key/value pairs of the control's names and values.
-   * 
+   *
    * Not all values are returned, only the presentation-related ones.
-   * 
+   *
    * @returns {Object}
    */
   toJSON () {
     return {
-      name: this.name, 
-      label: this.label, 
-      value: this.value, 
-      options: this.options, 
-      state: this.state, 
-      placeholder: this.placeholder, 
-      type: this.type, 
-      custom: this.custom, 
-      customClass: this.customClass, 
-      required: this.required, 
-      regex: this.regex.toString(), 
-      cols: this.cols, 
-      rows: this.rows, 
+      name: this.name,
+      altName: this.altName,
+      label: this.label,
+      value: this.value,
+      options: this.options,
+      state: this.state,
+      placeholder: this.placeholder,
+      type: this.type,
+      custom: this.custom,
+      customClass: this.customClass,
+      wrapClass: this.wrapClass,
+      required: this.required,
+      regex: this.regex.toString(),
+      cols: this.cols,
+      rows: this.rows,
     };
   }
 
@@ -566,8 +584,8 @@ export class Ctrl {
 
   /**
    * Sets and/or merges default props with the provided ones for the control.
-   * 
-   * @param {Object} props 
+   *
+   * @param {Object} props
    *     Props to merge or override with default values
    * @returns {Object}
    * @private
@@ -575,6 +593,7 @@ export class Ctrl {
   _defaultProps (props) {
     let defaultProps = {
       name: null,
+      altName: null,
       label: null,
       value: null,
       disabled: null,
@@ -584,6 +603,7 @@ export class Ctrl {
       type: CtrlType.DEFAULT,
       custom: false,
       customClass: null,
+      wrapClass: null,
       onChange: null,
       interceptor: null,
       interceptors: null,
@@ -591,30 +611,34 @@ export class Ctrl {
       required: false,
       requiredMessage: "This field is required",
       maxLength: null,
-      maxLengthMessage: "", 
+      maxLengthMessage: "",
       minLength: null,
-      minLengthMessage: "", 
+      minLengthMessage: "",
       maxAnswers: null,
-      maxAnswersMessage: "", 
+      maxAnswersMessage: "",
       minAnswers: null,
-      minAnswersMessage: "", 
+      minAnswersMessage: "",
       regex: null,
-      regexMessage: "", 
+      regexMessage: "",
       cnpjMessage: "",
       cpfMessage: "",
       pisMessage: "",
-      creditCardMessage: "", 
+      creditCardMessage: "",
       emailMessage: "",
       urlMessage: "",
-      cols: null, 
+      cols: null,
       rows: null
     };
 
     let returnable = Object.assign(
       {},
-      defaultProps, 
+      defaultProps,
       props
     );
+
+    if (returnable.value && returnable.type === CtrlType.BOOLEAN) {
+      returnable.value = (returnable.value === true);
+    }
 
     if (returnable.maxLength && returnable.maxLengthMessage === "") {
       returnable.maxLengthMessage = `Max length accepted is "${returnable.maxLength}" characters.`;
@@ -665,15 +689,15 @@ export class Ctrl {
 
   /**
    * Used only if the control is marked as `required`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateRequired () {
     const { value, required, requiredMessage } = this;
 
     if (
-      required 
+      required
       && (
         !value
         || value === ""
@@ -689,16 +713,16 @@ export class Ctrl {
 
   /**
    * Validates the max length of the input value.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateMaxLength () {
     const { value, maxLength, maxLengthMessage } = this;
     if (
-      maxLength 
-      && maxLength > 1 
-      && value 
+      maxLength
+      && maxLength > 1
+      && value
       && value.length > maxLength
     ) {
       this.message = maxLengthMessage;
@@ -710,16 +734,16 @@ export class Ctrl {
 
   /**
    * Validates the min length of the input value.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateMinLength () {
     const { value, minLength, minLengthMessage } = this;
     if (
-      minLength 
-      && minLength > 1 
-      && value 
+      minLength
+      && minLength > 1
+      && value
       && value.length < minLength
     ) {
       this.message = minLengthMessage;
@@ -731,18 +755,18 @@ export class Ctrl {
 
   /**
    * Validates the max answers allowed for this control.
-   * 
+   *
    * Only apply this if the value is an array of answers.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateMaxAnswers () {
     const { value, maxAnswers, maxAnswersMessage } = this;
 
     if (
-      maxAnswers 
-      && maxAnswers > 1 
+      maxAnswers
+      && maxAnswers > 1
       && Array.isArray(value)
       && value.length > maxAnswers
     ) {
@@ -755,18 +779,18 @@ export class Ctrl {
 
   /**
    * Validates the min answers allowed for this control.
-   * 
+   *
    * Only apply this if the value is an array of answers.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateMinAnswers () {
     const { value, minAnswers, minAnswersMessage } = this;
 
     if (
-      minAnswers 
-      && minAnswers > 1 
+      minAnswers
+      && minAnswers > 1
       && Array.isArray(value)
       && value.length < minAnswers
     ) {
@@ -779,9 +803,9 @@ export class Ctrl {
 
   /**
    * Validates an e-mail input type using `@yuigoto/validators`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateEmail () {
     const { type, value, emailMessage } = this;
@@ -800,9 +824,9 @@ export class Ctrl {
 
   /**
    * Validates the input value against the RegExp object, if declared.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateRegex () {
     const { value, regex, regexMessage } = this;
@@ -821,9 +845,9 @@ export class Ctrl {
 
   /**
    * Validates a CPF input type using `@yuigoto/validators`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateCpf () {
     const { type, value, cpfMessage } = this;
@@ -842,16 +866,16 @@ export class Ctrl {
 
   /**
    * Validates a CNPJ input type using `@yuigoto/validators`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateCnpj () {
     const { type, value, cnpjMessage } = this;
 
     if (
       type === CtrlType.CNPJ
-      && value !== null 
+      && value !== null
       && !Cnpj.validate(value)
     ) {
       this.message = cnpjMessage;
@@ -863,9 +887,9 @@ export class Ctrl {
 
   /**
    * Validates a PIS input type using `@yuigoto/validators`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validatePis () {
     const { type, value, pisMessage } = this;
@@ -905,16 +929,16 @@ export class Ctrl {
 
   /**
    * Validates a credit card input type using `@yuigoto/validators`.
-   * 
+   *
    * @returns {Boolean}
-   * @private 
+   * @private
    */
   _validateCreditCard () {
     const { type, value, creditCardMessage } = this;
 
     if (
       type === CtrlType.CREDIT_CARD
-      && value !== null 
+      && value !== null
       && (
         !CreditCard.validateDigit(value)
         || !CreditCard.validateModulo(value)
