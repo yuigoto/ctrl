@@ -30,7 +30,7 @@ class RendererBootstrap4 extends Component {
     let classes = ["form-group"];
 
     return (
-      <div className={classnames(classes, props.className)}>
+      <div className={classnames(classes, props.className, control.wrapClass)}>
         <label>{control.label}</label>
         {this._renderControl()}
         {
@@ -77,8 +77,28 @@ class RendererBootstrap4 extends Component {
   static renderCollection (controlCollection) {
     const { controls } = controlCollection;
 
-    if (controlCollection instanceof CtrlCollection) {
+    if (
+      controlCollection instanceof CtrlCollection
+    ) {
       let rendered = [];
+
+      if (controlCollection instanceof CtrlCollection) {
+        for (let i = 0; i < controlCollection.length; i++) {
+          if (controlCollection[i] instanceof CtrlCollection) {
+            rendered.push(
+              <div className={"form-row"}>
+                {RendererBootstrap4.renderCollection(controlCollection[i])}
+              </div>
+            );
+          } else {
+            rendered.push(
+              <RendererBootstrap4 control={controlCollection[i]} key={i}/>
+            );
+          }
+        }
+
+        return rendered;
+      }
 
       for (let i in controls) {
         rendered.push(
