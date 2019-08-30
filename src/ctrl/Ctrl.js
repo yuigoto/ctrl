@@ -29,6 +29,20 @@ export class Ctrl {
   altName;
 
   /**
+   * Additional information for the control, either for the label or description.
+   * 
+   * @type {String}
+   */
+  info;
+
+  /**
+   * Control description, used for special information.
+   * 
+   * @type {String}
+   */
+  description;
+
+  /**
    * Control label, must be a human-readable string.
    *
    * @type {String}
@@ -283,6 +297,12 @@ export class Ctrl {
    */
   constructor (props) {
     props = this._defaultProps(props);
+
+    if (!props.name) {
+      throw new TypeError(
+        "A `Ctrl` instance must have, at least, a name."
+      );
+    }
 
     if (
       props.type === CtrlType.MULTIPLE_OPTION
@@ -563,6 +583,8 @@ export class Ctrl {
     return {
       name: this.name,
       altName: this.altName,
+      info: this.info, 
+      description: this.description,
       label: this.label,
       value: this.value,
       options: this.options,
@@ -594,6 +616,8 @@ export class Ctrl {
     let defaultProps = {
       name: null,
       altName: null,
+      info: null, 
+      description: null,
       label: null,
       value: null,
       disabled: null,
