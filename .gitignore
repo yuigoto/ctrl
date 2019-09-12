@@ -1,4 +1,3 @@
-
 # IDE
 .idea/
 .vs/
@@ -18,7 +17,6 @@ test/
 
 # PRODUCTION
 build/
-examples/dist/
 dist/
 
 # PACKAGE LOCK FILES

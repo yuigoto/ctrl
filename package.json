@@ -1,19 +1,15 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.3.1",
-  "description": "Generic, multi-purpose control class, mostly useful for html inputs.",
+  "version": "0.5.1",
+  "description": "Generic, multi-purpose control class, mostly useful for html inputs and forms management.",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "start": "webpack-dev-server --mode production --config webpack.examples.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production --config webpack.prod.js",
-    "transpile": "babel src -d build",
-    "build-examples": "webpack --mode production --config webpack.examples.js",
-    "deploy": "gh-pages -d examples/dist",
-    "publish-demo": "npm run build-examples && npm run deploy"
+    "build": "tsc",
+    "test": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -23,38 +19,16 @@
   "author": "Fabio Y. Goto <lab@yuiti.dev>",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "prop-types": "^15.6.2",
-    "classnames": "^2.2.6"
+    "@yuigoto/validators": "^0.3.0"
   },
   "bugs": {
     "url": "https://github.com/yuigoto/ctrl/issues"
   },
   "homepage": "https://github.com/yuigoto/ctrl#readme",
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.5.5",
-    "@yuigoto/validators": "^0.2.2",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-module-resolver": "^3.2.0",
-    "css-loader": "^3.1.0",
-    "gh-pages": "^2.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "style-loader": "^0.23.1",
-    "webpack": "^4.39.1",
-    "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1"
+    "typescript": "^3.6.2"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
-    "prop-types": "^15.7.2"
+    "@yuigoto/validators": "^0.3.0"
   }
 }

@@ -1,6 +1,12 @@
 Changelog
 =========
 
+### 0.5.0
+
+_12/Sep/2019_
+
+Changed to TypeScript, decoupled renderers to make it generic, for real.
+
 ### 0.2.0
 
 _05/Aug/2019_

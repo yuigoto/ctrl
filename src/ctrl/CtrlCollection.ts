@@ -1,4 +1,5 @@
 import { Ctrl } from "./Ctrl";
+import { CtrlPropsObject } from "./CtrlDataType";
 
 /**
  * Ctrl/CtrlCollection
@@ -6,7 +7,7 @@ import { Ctrl } from "./Ctrl";
  * Provides an easy way to manage groups of `Ctrl` instances for forms or
  * other uses.
  *
- * @since 0.0.1
+ * @since 0.5.0
  */
 export class CtrlCollection extends Array {
   // Public Properties
@@ -15,23 +16,20 @@ export class CtrlCollection extends Array {
   /**
    * Optional name for the collection, you can use this property to add
    * sub-collections to a collection, to group inputs.
-   *
-   * @type {String}
    */
-  name;
+  public name: String;
 
   // Lifecycle
   // --------------------------------------------------------------------
 
   /**
-   * Class constructor.
-   *
-   * @param {String} name
+   * CtrlCollection constructor.
+   * 
+   * @param name 
    *     Optional name for the collection
    */
-  constructor (name = null) {
+  constructor (name:String = null) {
     super();
-
     this.name = name || null;
   }
 
@@ -41,47 +39,52 @@ export class CtrlCollection extends Array {
   /**
    * Adds a `Ctrl` instance to the collection or creates one if an object with
    * the proper arguments is provided.
-   *
-   * @param {Ctrl|CtrlCollection|Array|Object} controlArgs
+   * 
+   * @param controlArgs 
    *     `Ctrl` instance or object with props for creating one
-   * @return {CtrlCollection}
    */
-  add (controlArgs) {
-    if (!controlArgs) {
-      console.error(
-        "Please provide a valid `Ctrl` instance or arguments to create one."
-      );
-    }
-
-    if (controlArgs instanceof Ctrl || controlArgs instanceof CtrlCollection) {
-      this.push(controlArgs);
-    } else if (Array.isArray(controlArgs)) {
-      let tempCollection = new CtrlCollection();
-
-      for (let i = 0; i < controlArgs.length; i++) {
-        tempCollection.add(controlArgs[i]);
+  public add (controlArgs: any): CtrlCollection|null {
+    try {
+      if (!controlArgs) {
+        throw new TypeError(
+          "Please provide a valid `Ctrl` instance or parameters to create one."
+        );
       }
 
-      this.push(tempCollection);
-    } else if (
-      typeof controlArgs === "object"
-      && (
-        !controlArgs.hasOwnProperty("name")
-        || controlArgs.name === null
-        || controlArgs.name === undefined
-        || controlArgs.name === ""
-      )
-    ) {
-      console.error(
-        "The `name` property is required for every `Ctrl` instance."
-      );
-    } else {
-      this.push(
-        new Ctrl(controlArgs)
-      );
-    }
+      if (controlArgs instanceof Ctrl || controlArgs instanceof CtrlCollection) {
+        this.push(controlArgs);
+      } else if (Array.isArray(controlArgs)) {
+        let tempCollection: CtrlCollection = new CtrlCollection();
 
-    return this;
+        for (let i: number = 0; i < controlArgs.length; i++) {
+          tempCollection.add(controlArgs[i]);
+        }
+
+        this.push(tempCollection);
+      } else if (
+        typeof controlArgs === "object" 
+        && (
+          !controlArgs.hasOwnProperty("name") 
+          || controlArgs.name === null 
+          || controlArgs.name === undefined 
+          || controlArgs.name === ""
+        ) 
+      ) {
+        throw new TypeError(
+          "You must provide at least a `name` attribute to a `Ctrl` instance."
+        );
+      } else {
+        this.push(
+          new Ctrl(controlArgs)
+        );
+      }
+
+      return this;
+    } catch (e) {
+      console.exception(e);
+
+      return null;
+    }
   }
 
   /**
@@ -89,15 +92,14 @@ export class CtrlCollection extends Array {
    *
    * Returns `false` if no control is found.
    *
-   * @param {String} name
+   * @param name
    *     Control `name` attribute
-   * @param {String} subCollection
+   * @param subCollection
    *     Sub-collection name, where the control with `name` was declared
-   * @returns {Ctrl|Boolean}
    */
-  get (name, subCollection = null) {
-    for (let i = 0; i < this.length; i++) {
-      let current = this[i];
+  public get (name: String, subCollection: String = null): Ctrl|Boolean {
+    for (let i: number = 0; i < this.length; i++) {
+      let current: any = this[i];
 
       if (subCollection) {
         if (
@@ -120,32 +122,29 @@ export class CtrlCollection extends Array {
    * Returns `undefined` if no control is found or if the value with `name` is
    * a sub-collection.
    *
-   * @param {String} name
+   * @param name
    *     Control `name` attribute
-   * @param {String} subCollection
+   * @param subCollection
    *     Sub-collection name, where the control with `name` was declared
-   * @returns {*|Boolean}
    */
-  getValue (name, subCollection = null) {
-    let ctrl = this.get(name, subCollection);
-
+  public getValue (name: String, subCollection: String = null): any|Boolean {
+    let ctrl: Ctrl|Boolean = this.get(name, subCollection);
     if (ctrl instanceof CtrlCollection) return undefined;
-
-    return (ctrl && ctrl !== false) ? ctrl.value : undefined;
+    if (ctrl instanceof Ctrl) ctrl.value;
+    return undefined;
   }
 
   /**
    * Defines/updates/changes a control in the collection, just provide a valid
    * `Ctrl` instance and the method does the merging/overriding or setting.
    *
-   * @param {Ctrl} control
+   * @param control
    *     Control instance to add/update
-   * @param {String} subCollection
+   * @param subCollection
    *     Subcollection name, where `control` was/should be declared
-   * @returns {CtrlCollection}
    */
-  set (control, subCollection = null) {
-    for (let i = 0; i < this.length; i++) {
+  public set (control: Ctrl, subCollection: String = null): CtrlCollection {
+    for (let i: number = 0; i < this.length; i++) {
       if (subCollection) {
         if (
           subCollection === this[i].name
@@ -162,25 +161,28 @@ export class CtrlCollection extends Array {
       }
     }
 
-    this.controls.push(control);
+    this.push(control);
     return this;
   }
 
   /**
    * Sets the value only for a single control.
    *
-   * @param {String} name
+   * @param name
    *     Name of the control
-   * @param {*} value
+   * @param value
    *     Value to be set
-   * @param {String} subCollection
+   * @param subCollection
    *     Sub-collection name, where control was declared
-   * @returns {CtrlCollection}
    */
-  setValue (name, value, subCollection = null) {
-    let ctrl = this.get(name, subCollection);
+  public setValue (
+    name: String, 
+    value: any, 
+    subCollection: String = null
+  ): CtrlCollection {
+    let ctrl: Ctrl|Boolean = this.get(name, subCollection);
 
-    if (ctrl && ctrl !== false) {
+    if (ctrl instanceof Ctrl) {
       ctrl.value = value;
       this.set(ctrl, subCollection);
     } else {
@@ -195,14 +197,13 @@ export class CtrlCollection extends Array {
   /**
    * Removes a control from the collection.
    *
-   * @param {String} name
+   * @param name
    *     Control name
-   * @param {String} subCollection
+   * @param subCollection
    *     Sub-collection name, where control was declared
-   * @return {CtrlCollection}
    */
-  remove (name, subCollection = null) {
-    for (let i = 0; i < this.length; i++) {
+  public remove (name: String, subCollection: String = null): CtrlCollection {
+    for (let i: number = 0; i < this.length; i++) {
       if (subCollection) {
         if (
           subCollection === this[i].name
@@ -222,13 +223,11 @@ export class CtrlCollection extends Array {
 
   /**
    * Validates this control collection.
-   *
-   * @returns {Boolean}
    */
-  validate () {
-    let _valid = true;
+  public validate (): Boolean {
+    let _valid: Boolean = true;
 
-    for (let i = 0; i < this.length; i++) {
+    for (let i: number = 0; i < this.length; i++) {
       _valid = this[i].validate() && _valid;
     }
 
@@ -238,17 +237,20 @@ export class CtrlCollection extends Array {
   /**
    * Forces invalidation for a single control.
    *
-   * @param {String} name
+   * @param name
    *     Control name to invalidate
-   * @param {String} message
+   * @param message
    *     Message to be set as error message
-   * @param {String} subCollection
+   * @param subCollection
    *     Sub-collection name, where control was declared
-   * @returns {CtrlCollection}
    */
-  invalidate (name, message, subCollection = null) {
-    let ctrl = this.get(name, subCollection);
-    if (ctrl && ctrl !== false) ctrl.invalidate(message);
+  public invalidate (
+    name: String, 
+    message: String, 
+    subCollection: String = null
+  ): CtrlCollection {
+    let ctrl: Ctrl|Boolean = this.get(name, subCollection);
+    if (ctrl instanceof Ctrl) ctrl.invalidate(message);
     return this;
   }
 
@@ -256,11 +258,9 @@ export class CtrlCollection extends Array {
    * Invalidates ALL controls in this collection.
    *
    * USE WITH CARE!
-   *
-   * @returns {CtrlCollection}
    */
-  invalidateAll () {
-    for (let i = 0; i < this.length; i++) {
+  public invalidateAll (): CtrlCollection {
+    for (let i: number = 0; i < this.length; i++) {
       if (
         this[i] instanceof CtrlCollection
       ) {
@@ -275,21 +275,18 @@ export class CtrlCollection extends Array {
 
   /**
    * Overrides the default `toString()` method.
-   *
-   * @returns {String}
    */
-  toString () {
+  public toString (): string {
     return "[object CtrlCollection]";
   }
 
   /**
    * `toJSON()` alias, for compatibility.
    *
-   * @param {Boolean} useAltName
+   * @param useAltName
    *     If `altName` should be used to set the control's name, instead of `name`
-   * @returns {Object}
    */
-  toObject (useAltName = false) {
+  public toObject (useAltName: Boolean = false): Object {
     return this.toJSON(useAltName);
   }
 
@@ -297,24 +294,23 @@ export class CtrlCollection extends Array {
    * Overrides the default `toJSON()` method, returns a single object with
    * key/value pairs of the collection's names and values.
    *
-   * @param {Boolean} useAltName
+   * @param useAltName
    *     If `altName` should be used to set the control's name, instead of `name`
-   * @returns {Object}
    */
-  toJSON (useAltName = false) {
-    let _object = {};
+  public toJSON (useAltName: Boolean = false): Object {
+    let _object: Object = {};
 
-    for (let c = 0; c < this.length; c++) {
+    for (let c: number = 0; c < this.length; c++) {
       if (
         this[c] instanceof CtrlCollection
       ) {
         if (this[c].name) {
           _object[this[c].name] = this[c].toJSON(useAltName);
         } else {
-          let tempObject = this[c].toJSON();
+          let tempObject: Object = this[c].toJSON();
 
           for (let k in tempObject) {
-            _object[c] = tempObject[c];
+            _object[k] = tempObject[k];
           }
         }
       } else {
