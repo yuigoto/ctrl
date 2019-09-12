@@ -16,9 +16,11 @@ Install it with:
 Documentation
 -------------
 
-Ongoing documentation being handled on the [**wiki**](https://github.com/yuigoto/ctrl/wiki).
+> **IMPORTANT:**
+> 
+> Recently switched to TypeScript, documentation might change soon.
 
-As of now, only the basic classes, and not the renderer, are documented, since I expect to decouple renderers from the control abstractions.
+Ongoing documentation being handled on the [**wiki**](https://github.com/yuigoto/ctrl/wiki).
 
 -----
 
