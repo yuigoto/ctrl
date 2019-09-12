@@ -130,7 +130,7 @@ export class CtrlCollection extends Array {
   public getValue (name: String, subCollection: String = null): any|Boolean {
     let ctrl: Ctrl|Boolean = this.get(name, subCollection);
     if (ctrl instanceof CtrlCollection) return undefined;
-    if (ctrl instanceof Ctrl) ctrl.value;
+    if (ctrl instanceof Ctrl) return ctrl.value;
     return undefined;
   }
 
