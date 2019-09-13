@@ -36,7 +36,8 @@ export type CtrlOptionItem = {
   name: string,
   value: any,
   custom?: boolean,
-  disabled?: boolean
+  disabled?: boolean,
+  inline?: boolean
 };
 
 /**
