@@ -1,6 +1,12 @@
 Changelog
 =========
 
+### 0.5.3
+
+_13/Sep/2019_
+
+Added autocomplete attribute.
+
 ### 0.5.0
 
 _12/Sep/2019_
