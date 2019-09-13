@@ -38,6 +38,11 @@ export class Ctrl {
   label: String;
 
   /**
+   * Autocomplete attribute name.
+   */
+  autocomplete: String;
+
+  /**
    * Control value.
    */
   value: any;
@@ -455,6 +460,7 @@ export class Ctrl {
       info: this.info,
       description: this.description,
       label: this.label,
+      autocomplete: this.autocomplete,
       value: this.value,
       disabled: this.disabled,
       options: this.options,
@@ -810,6 +816,7 @@ export class Ctrl {
       info: "",
       description: "",
       label: "",
+      autocomplete: "",
       value: "",
       disabled: false,
       options: [],
