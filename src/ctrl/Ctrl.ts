@@ -929,7 +929,6 @@ export class Ctrl {
           ? propsToMap.value.replace(/([^\d\-().,]+)/g, "")
           : propsToMap.value;
         break;
-      case CtrlType.DROPDOWN:
       case CtrlType.RADIO_GROUP:
       case CtrlType.CHECKBOX_GROUP:
       case CtrlType.SINGLE_OPTION:
@@ -938,8 +937,9 @@ export class Ctrl {
           ? propsToMap.value
           : [];
         break;
+      case CtrlType.DROPDOWN:
       default:
-        propsToMap.value = "";
+        propsToMap.value = propsToMap.value || "";
         break;
     }
 
