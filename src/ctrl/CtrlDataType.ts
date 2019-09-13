@@ -34,7 +34,9 @@ export type CtrlChangeCallback = (event: Event, value: any) => void;
  */
 export type CtrlOptionItem = {
   name: string,
-  value: any
+  value: any,
+  custom?: boolean,
+  disabled?: boolean
 };
 
 /**
