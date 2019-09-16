@@ -30,5 +30,6 @@ export enum CtrlType {
   CREDIT_CARD = 31,
   EMAIL = 32,
   PHONE = 33,
-  URL = 34
+  URL = 34,
+  CEP = 35
 }

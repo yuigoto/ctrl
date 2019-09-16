@@ -1,4 +1,13 @@
-import { Cpf, Cnpj, Pis, Email, CreditCard, Url } from "@yuigoto/validators";
+import { 
+  Cpf, 
+  Cnpj, 
+  Pis, 
+  Email, 
+  CreditCard, 
+  Url,
+  Phone,
+  Cep
+} from "@yuigoto/validators";
 
 import { CtrlPropsObject, CtrlCallback, CtrlOptionItem, CtrlChangeCallback } from "./CtrlDataType";
 import { CtrlStates } from "./CtrlStates";
@@ -45,7 +54,7 @@ export class Ctrl {
   /**
    * Control value.
    */
-  value: any;
+  _value: any;
 
   /**
    * If the current control is disabled or not.
@@ -267,12 +276,41 @@ export class Ctrl {
    * 
    * @type {CtrlCallback|CtrlCallback[]}
    */
-  get interceptor () {
+  get interceptor (): CtrlCallback|CtrlCallback[] {
     return this.interceptors;
   }
 
   set interceptor (value: CtrlCallback|CtrlCallback[]) {
     this.interceptors = value;
+  }
+
+  /**
+   * Control value.
+   */
+  get value (): any {
+    return this._value;
+  }
+
+  set value (value: any) {
+    switch (this.type) {
+      case CtrlType.CEP:
+        value = Cep.filter(value);
+        break;
+      case CtrlType.PHONE:
+        value = Phone.filter(value);
+        break;
+      case CtrlType.CPF:
+        value = Cpf.filter(value);
+        break;
+      case CtrlType.CNPJ:
+        value = Cnpj.filter(value);
+        break;
+      case CtrlType.PIS:
+        value = Pis.filter(value);
+        break;
+    }
+    
+    this._value = value;
   }
 
   // Public Methods
@@ -329,6 +367,7 @@ export class Ctrl {
       case CtrlType.PIS:
       case CtrlType.CREDIT_CARD:
       case CtrlType.PHONE:
+      case CtrlType.CEP:
         return "tel";
       case CtrlType.PASSWORD:
         return "password";
