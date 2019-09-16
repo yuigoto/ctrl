@@ -514,7 +514,7 @@ export class Ctrl {
       minLength: this.minLength,
       maxAnswers: this.maxAnswers,
       minAnswers: this.minAnswers,
-      regex: this.regex.toString() || null,
+      regex: (this.regex instanceof RegExp) ? this.regex.toString() : null,
       cols: this.cols,
       rows: this.rows
     };
