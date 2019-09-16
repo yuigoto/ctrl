@@ -19,7 +19,7 @@
   "author": "Fabio Y. Goto <lab@yuiti.dev>",
   "license": "MIT",
   "peerDependencies": {
-    "@yuigoto/validators": "^0.3.0"
+    "@yuigoto/validators": "^0.4.3"
   },
   "bugs": {
     "url": "https://github.com/yuigoto/ctrl/issues"
@@ -29,6 +29,6 @@
     "typescript": "^3.6.2"
   },
   "dependencies": {
-    "@yuigoto/validators": "^0.3.0"
+    "@yuigoto/validators": "^0.4.3"
   }
 }
