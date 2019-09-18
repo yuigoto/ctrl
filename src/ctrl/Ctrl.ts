@@ -264,7 +264,7 @@ export class Ctrl {
       // Intercept values on load to avoid some problemas
       this.value = this.applyInterceptors(this.value);
     } catch (e) {
-      console.exception(e);
+      console.error(e);
     }
   }
 
@@ -339,7 +339,7 @@ export class Ctrl {
           value = interceptors(value);
         }
       } catch (err) {
-        console.exception(err, interceptors);
+        console.error(err, interceptors);
       }
     }
 

@@ -81,7 +81,7 @@ export class CtrlCollection extends Array {
 
       return this;
     } catch (e) {
-      console.exception(e);
+      console.error(e);
 
       return null;
     }
@@ -186,7 +186,7 @@ export class CtrlCollection extends Array {
       ctrl.value = value;
       this.set(ctrl, subCollection);
     } else {
-      console.exception(
+      console.error(
         `Control with the name '${name}' not found on this collection or any sub-collection.`
       );
     }
