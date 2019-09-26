@@ -638,7 +638,7 @@ export class Ctrl {
 
     if (
       type === CtrlType.CPF
-      && value !== null
+      && value 
       && !Cpf.validate(value)
     ) {
       this.message = cpfMessage;
@@ -658,7 +658,7 @@ export class Ctrl {
 
     if (
       type === CtrlType.CNPJ
-      && value !== null
+      && value 
       && !Cnpj.validate(value)
     ) {
       this.message = cnpjMessage;
@@ -678,7 +678,7 @@ export class Ctrl {
 
     if (
       type === CtrlType.PIS
-      && value !== null
+      && value 
       && !Pis.validate(value)
     ) {
       this.message = pisMessage;
@@ -694,11 +694,11 @@ export class Ctrl {
    * @private
    */
   private validateUrl (): boolean {
-    const { type, value, urlMessage } = this;
+    const { required, type, value, urlMessage } = this;
 
     if (
       type === CtrlType.URL
-      && value !== null
+      && value 
       && !Url.validate(value)
     ) {
       this.message = urlMessage;
@@ -718,7 +718,7 @@ export class Ctrl {
 
     if (
       type === CtrlType.CREDIT_CARD
-      && value !== null
+      && value 
       && (
         !CreditCard.validateDigit(value)
         || !CreditCard.validateModulo(value)
