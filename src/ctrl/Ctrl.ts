@@ -422,7 +422,7 @@ export class Ctrl {
    *      Value to toggle
    */
   public onBooleanChange (value: Boolean) {
-    this.value = value;
+    this.value = !value;
     this.resetState();
     if (this.onChange) this.onChange(null, value);
   }
