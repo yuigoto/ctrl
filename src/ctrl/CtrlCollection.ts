@@ -102,12 +102,7 @@ export class CtrlCollection extends Array {
       let current: any = this[i];
 
       if (subCollection) {
-        if (
-          subCollection === current.name
-          && subCollection instanceof CtrlCollection
-        ) {
-          return current.get(name);
-        }
+        return current.get(name);
       } else {
         if (name === current.name) return current;
       }
