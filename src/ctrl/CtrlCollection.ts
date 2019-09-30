@@ -160,7 +160,10 @@ export class CtrlCollection extends Array {
           return this;
         }
       } else {
-        if (control.name === this[i].name) {
+        if (this[i] instanceof CtrlCollection) {
+          this[i].set(control);
+          return this;
+        } else if (control.name === this[i].name) {
           this[i] = control;
           return this;
         }
@@ -218,7 +221,9 @@ export class CtrlCollection extends Array {
           this[i].remove(name);
         }
       } else {
-        if (name === this[i].name) {
+        if (this[i] instanceof CtrlCollection) {
+          this[i].remove(name);
+        } else if (name === this[i].name) {
           this.splice(i, 1);
         }
       }
