@@ -57,7 +57,7 @@ export class CtrlCollection extends Array {
         let tempCollection: CtrlCollection = new CtrlCollection();
 
         for (let i: number = 0; i < controlArgs.length; i++) {
-          tempCollection.add(controlArgs[i]);
+          tempCollection.add(controlArgs[i]); 
         }
 
         this.push(tempCollection);
@@ -100,11 +100,22 @@ export class CtrlCollection extends Array {
   public get (name: String, subCollection: String = null): Ctrl|Boolean {
     for (let i: number = 0; i < this.length; i++) {
       let current: any = this[i];
-      
-      if (current instanceof CtrlCollection) {
-        return current.get(name);
+
+      if (subCollection) {
+        if (
+          subCollection === current.name
+          && current instanceof CtrlCollection
+        ) {
+          return current.get(name);
+        }
       } else {
-        if (name === current.name) return current;
+        if (current instanceof CtrlCollection) {
+          return current.get(name);
+        } else {
+          if (name === current.name) {
+            return current;
+          }
+        }
       }
     }
 
@@ -202,7 +213,7 @@ export class CtrlCollection extends Array {
       if (subCollection) {
         if (
           subCollection === this[i].name
-          && subCollection instanceof CtrlCollection
+          && this[i] instanceof CtrlCollection
         ) {
           this[i].remove(name);
         }

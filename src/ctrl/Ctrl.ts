@@ -454,7 +454,7 @@ export class Ctrl {
    */
   public onValueToggle(value: any): void {
     value = this.applyInterceptors(value);
-
+    
     let valuesArray: any = this.value;
     if (!valuesArray || !(valuesArray instanceof Array)) {
       valuesArray = [];
