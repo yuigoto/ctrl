@@ -100,8 +100,8 @@ export class CtrlCollection extends Array {
   public get (name: String, subCollection: String = null): Ctrl|Boolean {
     for (let i: number = 0; i < this.length; i++) {
       let current: any = this[i];
-
-      if (subCollection) {
+      
+      if (current instanceof CtrlCollection) {
         return current.get(name);
       } else {
         if (name === current.name) return current;
@@ -302,7 +302,7 @@ export class CtrlCollection extends Array {
         if (this[c].name) {
           _object[this[c].name] = this[c].toJSON(useAltName);
         } else {
-          let tempObject: Object = this[c].toJSON();
+          let tempObject: Object = this[c].toJSON(useAltName);
 
           for (let k in tempObject) {
             _object[k] = tempObject[k];
