@@ -109,12 +109,14 @@ export class CtrlCollection extends Array {
           return current.get(name);
         }
       } else {
+
         if (current instanceof CtrlCollection) {
-          return current.get(name);
-        } else {
-          if (name === current.name) {
-            return current;
-          }
+          let temp = current.get(name);
+          if (temp) return temp;
+        }
+
+        if (name === current.name) {
+          return current;
         }
       }
     }
