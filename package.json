@@ -29,6 +29,6 @@
     "typescript": "^3.6.2"
   },
   "dependencies": {
-    "@yuigoto/validators": "^0.4.4"
+    "@yuigoto/validators": "^0.4.5"
   }
 }
