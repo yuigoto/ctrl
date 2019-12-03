@@ -79,6 +79,7 @@ export type CtrlPropsObject = {
   minAnswers?: number,
   minAnswersMessage?: string,
   regex?: RegExp,
+  dateMessage?: string,
   regexMessage?: string,
   cnpjMessage?: string,
   cpfMessage?: string,
