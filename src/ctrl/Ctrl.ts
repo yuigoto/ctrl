@@ -6,7 +6,8 @@ import {
   CreditCard, 
   Url,
   Phone,
-  Cep
+  Cep,
+  DateString
 } from "@yuigoto/validators";
 
 import { CtrlPropsObject, CtrlCallback, CtrlOptionItem, CtrlChangeCallback } from "./CtrlDataType";
@@ -186,6 +187,11 @@ export class Ctrl {
   regexMessage: String;
 
   /**
+   * Date validation message.
+   */
+  dateMessage: String;
+
+  /**
    * Brazilian Legal Entity Document (CNPJ) number validation message.
    *
    * Exclusive for the `CtrlTypes.CNPJ` input type.
@@ -307,6 +313,9 @@ export class Ctrl {
         break;
       case CtrlType.PIS:
         value = Pis.filter(value);
+        break;
+      case CtrlType.DATE:
+        value = DateString.filter(value);
         break;
     }
     
@@ -493,6 +502,15 @@ export class Ctrl {
    * Not all values are returned, though.
    */
   public toJSON (): object {
+    let parsedValue;
+
+    if (this.type === CtrlType.DATE) {
+      let frag = parsedValue = /^([0-9]{2})\/?([0-9]{2})\/?([0-9]{4})$/
+        .exec(this.value);
+
+      parsedValue = `${frag[3]}-${frag[2]}-${frag[1]}`;
+    }
+
     return {
       name: this.name,
       altName: this.altName,
@@ -500,7 +518,7 @@ export class Ctrl {
       description: this.description,
       label: this.label,
       autocomplete: this.autocomplete,
-      value: this.value,
+      value: (this.type === CtrlType.DATE) ? parsedValue : this.value,
       disabled: this.disabled,
       options: this.options,
       state: this.state,
@@ -538,8 +556,9 @@ export class Ctrl {
       && this.validateMinLength() 
       && this.validateMaxLength() 
       && this.validateMinAnswers() 
-      && this.validateMaxAnswers() 
-      && this.validateRegex() 
+      && this.validateMaxAnswers()
+      && this.validateRegex()
+      && this.validateDate()
       && this.validateEmail() 
       && this.validateUrl() 
       && this.validateCnpj() 
@@ -551,20 +570,6 @@ export class Ctrl {
 
   // Private Methods
   // --------------------------------------------------------------------
-
-  /**
-   * Makes sure the input value is always a numeric-only string, returns an 
-   * empty string if invalid.
-   * 
-   * @param value 
-   *     Value to assert 
-   */
-  private assertIsNumericString (value: any): string {
-    if (typeof value !== "number" && typeof value !== "string") return "";
-    if (typeof value === "number") value = value.toString();
-    value = value.replace(/[^\d]/g, "");
-    return value;
-  }
 
   /**
    * Validates the `required` status.
@@ -587,6 +592,28 @@ export class Ctrl {
 
     return true;
   }
+
+  /**
+   * Validates a date string with the format `DD/MM/YYYY`.
+   *
+   * @private
+   */
+  private validateDate (): boolean {
+    const { type, value, dateMessage } = this;
+
+    if (
+      type === CtrlType.DATE
+      && value
+      && !DateString.validate(value)
+    ) {
+      this.message = dateMessage;
+      this.state = CtrlStates.ERROR;
+      return false;
+    }
+
+    return true;
+  }
+
 
   /**
    * Validates an e-mail input type using `@yuigoto/validators`.
@@ -744,9 +771,10 @@ export class Ctrl {
       || this.type === CtrlType.CPF 
       || this.type === CtrlType.PIS 
       || this.type === CtrlType.CREDIT_CARD 
-      || this.type === CtrlType.PHONE   
+      || this.type === CtrlType.PHONE
+      || this.type === CtrlType.DATE
     ) {
-      value = this.assertIsNumericString(value);
+      value = Ctrl.assertIsNumericString(value);
     }
 
     if (
@@ -769,25 +797,26 @@ export class Ctrl {
    * @private
    */
   private validateMinLength (): boolean {
-    let { value, maxLength, minLengthMessage } = this;
+    let { value, minLength, minLengthMessage } = this;
     
     if (
       this.type === CtrlType.CNPJ
       || this.type === CtrlType.CPF 
       || this.type === CtrlType.PIS 
       || this.type === CtrlType.CREDIT_CARD 
-      || this.type === CtrlType.PHONE   
+      || this.type === CtrlType.PHONE
+      || this.type === CtrlType.DATE
     ) {
-      value = this.assertIsNumericString(value);
+      value = Ctrl.assertIsNumericString(value);
     }
 
     if (
-      this.minLength 
-      && this.minLength > 1 
+      minLength
+      && minLength > 1
       && value 
-      && value.length < this.minLength
+      && value.length < minLength
     ) {
-      this.message = this.minLengthMessage;
+      this.message = minLengthMessage;
       this.state = CtrlStates.ERROR;
       return false;
     }
@@ -846,10 +875,24 @@ export class Ctrl {
   // --------------------------------------------------------------------
 
   /**
+   * Makes sure the input value is always a numeric-only string, returns an
+   * empty string if invalid.
+   *
+   * @param value
+   *     Value to assert
+   */
+  static assertIsNumericString (value: any): string {
+    if (typeof value !== "number" && typeof value !== "string") return "";
+    if (typeof value === "number") value = value.toString();
+    value = value.replace(/[^\d]/g, "");
+    return value;
+  }
+
+  /**
    * Generates a `defaultProps` object for a `Ctrl` instance.
    */
   static defaultProps (): CtrlPropsObject {
-    let _default: CtrlPropsObject = {
+    return {
       name: "",
       altName: "",
       info: "",
@@ -881,6 +924,7 @@ export class Ctrl {
       minAnswersMessage: "",
       regex: null,
       regexMessage: "",
+      dateMessage: "",
       cnpjMessage: "",
       cpfMessage: "",
       pisMessage: "",
@@ -890,8 +934,6 @@ export class Ctrl {
       cols: null,
       rows: null
     };
-
-    return _default;
   }
 
   /**
@@ -933,6 +975,10 @@ export class Ctrl {
 
     if (propsToMap.regex && propsToMap.regexMessage.trim() === "") {
       propsToMap.regexMessage = `The current value doesn't match the regular expression.`;
+    }
+
+    if (propsToMap.dateMessage.trim() === "") {
+      propsToMap.dateMessage = "Invalid date value.";
     }
 
     if (propsToMap.cnpjMessage.trim() === "") {
