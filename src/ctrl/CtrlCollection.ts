@@ -328,9 +328,9 @@ export class CtrlCollection extends Array {
         }
       } else {
         if (useAltName && this[c].altName !== null && this[c].altName !== "") {
-          _object[this[c].altName] = this[c].value;
+          _object[this[c].altName] = this[c].toJSON().value;
         } else {
-          _object[this[c].name] = this[c].value;
+          _object[this[c].name] = this[c].toJSON().value;
         }
       }
     }
