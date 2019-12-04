@@ -20,7 +20,7 @@ build/
 dist/
 
 # PACKAGE LOCK FILES
-package-lock.json
+src/ctrl/package-lock.json
 yarn.lock
 
 # OUTROS ARQUIVOS
