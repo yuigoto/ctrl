@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "noImplicitAny": true,
+    "target": "es6",
     "declaration": true,
     "removeComments": true,
     "baseUrl": "./",
     "lib": [
-      "es6",
-      "es7",
+      "es5",
       "dom",
       "es2015.core"
     ],
@@ -22,10 +20,9 @@
     "traceResolution": false
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ]
 }
