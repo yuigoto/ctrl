@@ -32,7 +32,7 @@ import {
  * @author    Fabio Y. Goto <lab@yuiti.dev>
  * @since     0.5.0
  */
-export class Ctrl {
+export default class Ctrl {
   /**
    * Class index signature, so we won't have any implicitAny errors.
    */

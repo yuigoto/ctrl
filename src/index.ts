@@ -1,5 +1,5 @@
-import { Ctrl } from "./ctrl/Ctrl";
-import { CtrlCollection } from "./ctrl/CtrlCollection";
+import Ctrl from "./ctrl/Ctrl";
+import CtrlCollection from "./ctrl/CtrlCollection";
 import { 
   CtrlStates, 
   CtrlType
