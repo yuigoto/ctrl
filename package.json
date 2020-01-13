@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/yuigoto/ctrl#readme",
   "devDependencies": {
-    "@yuigoto/validators": "^0.5.0"
+    "@yuigoto/validators": "^0.5.0",
+    "typescript": "^3.6.2"
   }
 }
