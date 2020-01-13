@@ -1,4 +1,4 @@
-import { Ctrl } from "./Ctrl";
+import Ctrl from "./Ctrl";
 import { CtrlProps } from "../core/Types";
 import { ValidateCtrlProps } from "../core/Utils";
 
@@ -13,7 +13,15 @@ import { ValidateCtrlProps } from "../core/Utils";
  * @author    Fabio Y. Goto <lab@yuiti.dev>
  * @since     0.5.0
  */
-export class CtrlCollection extends Array {
+export default class CtrlCollection {
+  // PRIVATE PROPERTIES
+  // --------------------------------------------------------------------
+
+  /**
+   * Stores all controls and subcollections.
+   */
+  private __collection: any[];
+
   // PUBLIC PROPERTIES
   // --------------------------------------------------------------------
   
@@ -33,8 +41,8 @@ export class CtrlCollection extends Array {
    *     Optional name for this collection
    */
   constructor (name: string = null) {
-    super();
     this.name = name || null;
+    this.__collection = [];
   }
   
   // PUBLIC METHODS
@@ -59,7 +67,7 @@ export class CtrlCollection extends Array {
       }
       
       if (controlArgs instanceof Ctrl || controlArgs instanceof CtrlCollection) {
-        this.push(controlArgs);
+        this.__collection.push(controlArgs);
       } else if (Array.isArray(controlArgs)) {
         let tempCollection: CtrlCollection = new CtrlCollection();
         
@@ -67,14 +75,13 @@ export class CtrlCollection extends Array {
           tempCollection.add(controlArgs[i]);
         }
         
-        this.push(tempCollection);
+        this.__collection.push(tempCollection);
       } else if (!ValidateCtrlProps(controlArgs)) {
         throw new TypeError(
           "You must provide at least a `name` attribute to a `Ctrl`."
         );
       } else {
-        console.log(controlArgs);
-        this.push(new Ctrl(controlArgs));
+        this.__collection.push(new Ctrl(controlArgs));
       }
       
       return this;
@@ -103,8 +110,8 @@ export class CtrlCollection extends Array {
     name: string, 
     subCollection: string = null
   ): Ctrl|boolean {
-    for (let i: number = 0; i < this.length; i++) {
-      let current: Ctrl|CtrlCollection = this[i];
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      let current: Ctrl|CtrlCollection = this.__collection[i];
       
       if (subCollection !== null && subCollection !== "") {
         if (
@@ -164,8 +171,8 @@ export class CtrlCollection extends Array {
    *     stores in this collection
    */
   public set (control: Ctrl, subCollection: string = null): CtrlCollection {
-    for (let i: number = 0; i < this.length; i++) {
-      let current: Ctrl|CtrlCollection = this[i];
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      let current: Ctrl|CtrlCollection = this.__collection[i];
       
       if (
         (typeof subCollection !== "boolean") 
@@ -178,23 +185,23 @@ export class CtrlCollection extends Array {
             && current instanceof CtrlCollection
         ) {
           // ADD TO NAMED COLLECTION
-          this[i].set(control);
+          this.__collection[i].set(control);
           return this;
         }
       } else {
         if (control.name === current.name) {
           // REPLACE
-          this[i] = control;
+          this.__collection[i] = control;
           return this;
         } else if (current instanceof CtrlCollection) {
           // ADD TO UNNAMED COLLECTION
-          this[i].set(control);
+          this.__collection[i].set(control);
           return this;
         }
       }
     }
     
-    this.push(control);
+    this.__collection.push(control);
     return this;
   }
   
@@ -217,8 +224,8 @@ export class CtrlCollection extends Array {
     value: any,
     subCollection: string = null
   ): CtrlCollection {
-    for (let i: number = 0; i < this.length; i++) {
-      let current: Ctrl|CtrlCollection = this[i];
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      let current: Ctrl|CtrlCollection = this.__collection[i];
       
       if (
         (typeof subCollection !== "boolean") 
@@ -230,14 +237,14 @@ export class CtrlCollection extends Array {
           subCollection === current.name 
             && current instanceof CtrlCollection
         ) {
-          this[i].setValue(name, value);
+          this.__collection[i].setValue(name, value);
           return this;
         }
       } else {
         if (name === current.name) {
-          this[i].value = value;
+          this.__collection[i].value = value;
         } else if (current instanceof CtrlCollection) {
-          this[i].setValue(name, value);
+          this.__collection[i].setValue(name, value);
         }
       }
     }
@@ -258,8 +265,8 @@ export class CtrlCollection extends Array {
    *     stores in this collection
    */
   public remove (name: string, subCollection: string = null): CtrlCollection {
-    for (let i: number = 0; i < this.length; i++) {
-      let current: Ctrl|CtrlCollection = this[i];
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      let current: Ctrl|CtrlCollection = this.__collection[i];
       
       if (
         (typeof subCollection !== "boolean") 
@@ -271,13 +278,13 @@ export class CtrlCollection extends Array {
           subCollection === current.name 
             && current instanceof CtrlCollection
         ) {
-          this[i].remove(name);
+          this.__collection[i].remove(name);
         }
       } else {
         if (name === current.name) {
-          this.splice(i, 1);
+          this.__collection.splice(i, 1);
         } else if (current instanceof CtrlCollection) {
-          this[i].remove(name);
+          this.__collection[i].remove(name);
         }
       }
     }
@@ -291,8 +298,8 @@ export class CtrlCollection extends Array {
   public validate (): boolean {
     let status: boolean = true;
     
-    for (let i: number = 0; i < this.length; i++) {
-      status = this[i].validate() && status;
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      status = this.__collection[i].validate() && status;
     }
     
     return status;
@@ -329,11 +336,11 @@ export class CtrlCollection extends Array {
    * USE WITH CARE!
    */
   public invalidateAll (): CtrlCollection {
-    for (let i: number = 0; i < this.length; i++) {
-      if (this[i] instanceof CtrlCollection) {
-        this[i].invalidateAll();
+    for (let i: number = 0; i < this.__collection.length; i++) {
+      if (this.__collection[i] instanceof CtrlCollection) {
+        this.__collection[i].invalidateAll();
       } else {
-        this[i].invalidate();
+        this.__collection[i].invalidate();
       }
     }
     return this;
@@ -361,8 +368,8 @@ export class CtrlCollection extends Array {
   public toJSON (useAlias: boolean = false): object {
     let returnable: {[key: string]: any} = {};
     
-    for (let c: number = 0; c < this.length; c++) {
-      let current: Ctrl|CtrlCollection = this[c];
+    for (let c: number = 0; c < this.__collection.length; c++) {
+      let current: Ctrl|CtrlCollection = this.__collection[c];
       
       if (current instanceof CtrlCollection) {
         if (current.name) {
