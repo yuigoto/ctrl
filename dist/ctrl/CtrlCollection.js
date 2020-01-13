@@ -1,48 +1,31 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var Ctrl_1 = require("./Ctrl");
-var Utils_1 = require("../core/Utils");
-var CtrlCollection = (function (_super) {
-    __extends(CtrlCollection, _super);
-    function CtrlCollection(name) {
-        if (name === void 0) { name = null; }
-        var _this = _super.call(this) || this;
-        _this.name = name || null;
-        return _this;
+import { Ctrl } from "./Ctrl";
+import { ValidateCtrlProps } from "../core/Utils";
+export class CtrlCollection extends Array {
+    constructor(name = null) {
+        super();
+        this.name = name || null;
     }
-    CtrlCollection.prototype.add = function (controlArgs) {
+    add(controlArgs) {
         try {
             if (!controlArgs) {
                 throw new TypeError("Please provide a valid `Ctrl`, `CtrlCollection` or parameters to create a control.");
             }
-            if (controlArgs instanceof Ctrl_1.Ctrl || controlArgs instanceof CtrlCollection) {
+            if (controlArgs instanceof Ctrl || controlArgs instanceof CtrlCollection) {
                 this.push(controlArgs);
             }
             else if (Array.isArray(controlArgs)) {
-                var tempCollection = new CtrlCollection();
-                for (var i = 0; i < controlArgs.length; i++) {
+                let tempCollection = new CtrlCollection();
+                for (let i = 0; i < controlArgs.length; i++) {
                     tempCollection.add(controlArgs[i]);
                 }
                 this.push(tempCollection);
             }
-            else if (!Utils_1.ValidateCtrlProps(controlArgs)) {
+            else if (!ValidateCtrlProps(controlArgs)) {
                 throw new TypeError("You must provide at least a `name` attribute to a `Ctrl`.");
             }
             else {
-                this.push(new Ctrl_1.Ctrl(controlArgs));
+                console.log(controlArgs);
+                this.push(new Ctrl(controlArgs));
             }
             return this;
         }
@@ -50,11 +33,10 @@ var CtrlCollection = (function (_super) {
             console.error(e);
             return null;
         }
-    };
-    CtrlCollection.prototype.get = function (name, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        for (var i = 0; i < this.length; i++) {
-            var current = this[i];
+    }
+    get(name, subCollection = null) {
+        for (let i = 0; i < this.length; i++) {
+            let current = this[i];
             if (subCollection !== null && subCollection !== "") {
                 if (subCollection === current.name
                     && current instanceof CtrlCollection) {
@@ -63,7 +45,7 @@ var CtrlCollection = (function (_super) {
             }
             else {
                 if (current instanceof CtrlCollection) {
-                    var item = current.get(name);
+                    let item = current.get(name);
                     if (item !== false)
                         return item;
                 }
@@ -73,20 +55,18 @@ var CtrlCollection = (function (_super) {
             }
         }
         return false;
-    };
-    CtrlCollection.prototype.getValue = function (name, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        var ctrl = this.get(name, subCollection);
+    }
+    getValue(name, subCollection = null) {
+        let ctrl = this.get(name, subCollection);
         if (ctrl instanceof CtrlCollection)
             return undefined;
-        if (ctrl instanceof Ctrl_1.Ctrl)
+        if (ctrl instanceof Ctrl)
             return ctrl.value;
         return undefined;
-    };
-    CtrlCollection.prototype.set = function (control, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        for (var i = 0; i < this.length; i++) {
-            var current = this[i];
+    }
+    set(control, subCollection = null) {
+        for (let i = 0; i < this.length; i++) {
+            let current = this[i];
             if ((typeof subCollection !== "boolean")
                 && subCollection !== null
                 && subCollection !== undefined
@@ -110,28 +90,34 @@ var CtrlCollection = (function (_super) {
         }
         this.push(control);
         return this;
-    };
-    CtrlCollection.prototype.setValue = function (name, value, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        var ctrl = this.get(name, subCollection);
-        try {
-            if (ctrl instanceof Ctrl_1.Ctrl) {
-                ctrl.value = value;
-                this.set(ctrl, subCollection);
+    }
+    setValue(name, value, subCollection = null) {
+        for (let i = 0; i < this.length; i++) {
+            let current = this[i];
+            if ((typeof subCollection !== "boolean")
+                && subCollection !== null
+                && subCollection !== undefined
+                && subCollection !== "") {
+                if (subCollection === current.name
+                    && current instanceof CtrlCollection) {
+                    this[i].setValue(name, value);
+                    return this;
+                }
             }
             else {
-                throw new TypeError("Control with the name '" + name + "' not found.");
+                if (name === current.name) {
+                    this[i].value = value;
+                }
+                else if (current instanceof CtrlCollection) {
+                    this[i].setValue(name, value);
+                }
             }
         }
-        catch (e) {
-            console.error(e);
-        }
         return this;
-    };
-    CtrlCollection.prototype.remove = function (name, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        for (var i = 0; i < this.length; i++) {
-            var current = this[i];
+    }
+    remove(name, subCollection = null) {
+        for (let i = 0; i < this.length; i++) {
+            let current = this[i];
             if ((typeof subCollection !== "boolean")
                 && subCollection !== null
                 && subCollection !== undefined
@@ -151,23 +137,22 @@ var CtrlCollection = (function (_super) {
             }
         }
         return this;
-    };
-    CtrlCollection.prototype.validate = function () {
-        var status = true;
-        for (var i = 0; i < this.length; i++) {
+    }
+    validate() {
+        let status = true;
+        for (let i = 0; i < this.length; i++) {
             status = this[i].validate() && status;
         }
         return status;
-    };
-    CtrlCollection.prototype.invalidate = function (name, message, subCollection) {
-        if (subCollection === void 0) { subCollection = null; }
-        var ctrl = this.get(name, subCollection);
-        if (ctrl instanceof Ctrl_1.Ctrl)
+    }
+    invalidate(name, message, subCollection = null) {
+        let ctrl = this.get(name, subCollection);
+        if (ctrl instanceof Ctrl)
             ctrl.invalidate(message);
         return this;
-    };
-    CtrlCollection.prototype.invalidateAll = function () {
-        for (var i = 0; i < this.length; i++) {
+    }
+    invalidateAll() {
+        for (let i = 0; i < this.length; i++) {
             if (this[i] instanceof CtrlCollection) {
                 this[i].invalidateAll();
             }
@@ -176,23 +161,21 @@ var CtrlCollection = (function (_super) {
             }
         }
         return this;
-    };
-    CtrlCollection.prototype.toObject = function (useAlias) {
-        if (useAlias === void 0) { useAlias = false; }
+    }
+    toObject(useAlias = false) {
         return this.toJSON(useAlias);
-    };
-    CtrlCollection.prototype.toJSON = function (useAlias) {
-        if (useAlias === void 0) { useAlias = false; }
-        var returnable = {};
-        for (var c = 0; c < this.length; c++) {
-            var current = this[c];
+    }
+    toJSON(useAlias = false) {
+        let returnable = {};
+        for (let c = 0; c < this.length; c++) {
+            let current = this[c];
             if (current instanceof CtrlCollection) {
                 if (current.name) {
                     returnable[current.name] = current.toJSON(useAlias);
                 }
                 else {
-                    var tempObject = current.toJSON(useAlias);
-                    for (var key in tempObject) {
+                    let tempObject = current.toJSON(useAlias);
+                    for (let key in tempObject) {
                         returnable[key] = tempObject[key];
                     }
                 }
@@ -207,10 +190,8 @@ var CtrlCollection = (function (_super) {
             }
         }
         return returnable;
-    };
-    CtrlCollection.prototype.toString = function () {
-        return "[object CtrlCollection]";
-    };
-    return CtrlCollection;
-}(Array));
-exports.CtrlCollection = CtrlCollection;
+    }
+    toString() {
+        return `[object CtrlCollection]`;
+    }
+}

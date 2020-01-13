@@ -73,6 +73,7 @@ export class CtrlCollection extends Array {
           "You must provide at least a `name` attribute to a `Ctrl`."
         );
       } else {
+        console.log(controlArgs);
         this.push(new Ctrl(controlArgs));
       }
       
@@ -216,19 +217,29 @@ export class CtrlCollection extends Array {
     value: any,
     subCollection: string = null
   ): CtrlCollection {
-    let ctrl: Ctrl|boolean = this.get(name, subCollection);
-    
-    try {
-      if (ctrl instanceof Ctrl) {
-        ctrl.value = value;
-        this.set(ctrl, subCollection);
+    for (let i: number = 0; i < this.length; i++) {
+      let current: Ctrl|CtrlCollection = this[i];
+      
+      if (
+        (typeof subCollection !== "boolean") 
+          && subCollection !== null 
+          && subCollection !== undefined 
+          && subCollection !== ""
+      ) {
+        if (
+          subCollection === current.name 
+            && current instanceof CtrlCollection
+        ) {
+          this[i].setValue(name, value);
+          return this;
+        }
       } else {
-        throw new TypeError(
-          `Control with the name '${name}' not found.`
-        );
+        if (name === current.name) {
+          this[i].value = value;
+        } else if (current instanceof CtrlCollection) {
+          this[i].setValue(name, value);
+        }
       }
-    } catch (e) {
-      console.error(e);
     }
     
     return this;

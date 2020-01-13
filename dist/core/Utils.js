@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Enum_1 = require("./Enum");
-exports.CreateEmptyProps = function () {
+import { CtrlStates, CtrlType } from "./Enum";
+export const CreateEmptyProps = () => {
     return {
         name: "",
         alias: "",
@@ -12,10 +10,10 @@ exports.CreateEmptyProps = function () {
         value: "",
         disabled: false,
         options: [],
-        state: Enum_1.CtrlStates.NORMAL,
+        state: CtrlStates.NORMAL,
         dirty: false,
         placeholder: "",
-        type: Enum_1.CtrlType.DEFAULT,
+        type: CtrlType.DEFAULT,
         custom: false,
         customClass: null,
         wrapClass: null,
@@ -45,25 +43,25 @@ exports.CreateEmptyProps = function () {
         rows: null
     };
 };
-exports.MapDefaultCtrlProps = function (props) {
-    var propsToMap = Object.assign({}, exports.CreateEmptyProps(), props);
+export const MapDefaultCtrlProps = (props) => {
+    let propsToMap = Object.assign({}, CreateEmptyProps(), props);
     if (propsToMap.required === true && propsToMap.requiredMessage.trim() === "") {
-        propsToMap.requiredMessage = "This field is required.";
+        propsToMap.requiredMessage = `This field is required.`;
     }
     if (propsToMap.maxLength && propsToMap.maxLengthMessage.trim() === "") {
-        propsToMap.maxLengthMessage = "Max length accepted is \"" + propsToMap.maxLength + "\" characters.";
+        propsToMap.maxLengthMessage = `Max length accepted is "${propsToMap.maxLength}" characters.`;
     }
     if (propsToMap.minLength && propsToMap.minLengthMessage.trim() === "") {
-        propsToMap.minLengthMessage = "Min length accepted is \"" + propsToMap.minLength + "\" characters.";
+        propsToMap.minLengthMessage = `Min length accepted is "${propsToMap.minLength}" characters.`;
     }
     if (propsToMap.maxAnswers && propsToMap.maxAnswersMessage.trim() === "") {
-        propsToMap.maxAnswersMessage = "You can't choose more than \"" + propsToMap.maxAnswers + "\" options.";
+        propsToMap.maxAnswersMessage = `You can't choose more than "${propsToMap.maxAnswers}" options.`;
     }
     if (propsToMap.minAnswers && propsToMap.minAnswersMessage.trim() === "") {
-        propsToMap.minAnswersMessage = "Please choose at least \"" + propsToMap.minAnswers + "\" options.";
+        propsToMap.minAnswersMessage = `Please choose at least "${propsToMap.minAnswers}" options.`;
     }
     if (propsToMap.regex && propsToMap.regexMessage.trim() === "") {
-        propsToMap.regexMessage = "The current value doesn't match the regular expression.";
+        propsToMap.regexMessage = `The current value doesn't match the regular expression.`;
     }
     if (propsToMap.dateMessage.trim() === "") {
         propsToMap.dateMessage = "Invalid date value.";
@@ -87,19 +85,19 @@ exports.MapDefaultCtrlProps = function (props) {
         propsToMap.urlMessage = "Invalid URL provided.";
     }
     switch (propsToMap.type) {
-        case Enum_1.CtrlType.BOOLEAN:
+        case CtrlType.BOOLEAN:
             propsToMap.value = (propsToMap.value === true);
             break;
-        case Enum_1.CtrlType.NUMBER:
+        case CtrlType.NUMBER:
             propsToMap.value = (typeof propsToMap.value === "string")
                 ? propsToMap.value.replace(/([^\d\-().,]+)/g, "")
                 : propsToMap.value;
             break;
-        case Enum_1.CtrlType.DROPDOWN:
-        case Enum_1.CtrlType.RADIO_GROUP:
-        case Enum_1.CtrlType.CHECKBOX_GROUP:
-        case Enum_1.CtrlType.SINGLE_OPTION:
-        case Enum_1.CtrlType.MULTIPLE_OPTION:
+        case CtrlType.DROPDOWN:
+        case CtrlType.RADIO_GROUP:
+        case CtrlType.CHECKBOX_GROUP:
+        case CtrlType.SINGLE_OPTION:
+        case CtrlType.MULTIPLE_OPTION:
             propsToMap.value = (Array.isArray(propsToMap.value))
                 ? propsToMap.value
                 : [];
@@ -110,7 +108,7 @@ exports.MapDefaultCtrlProps = function (props) {
     }
     return propsToMap;
 };
-exports.ValidateCtrlProps = function (props) {
+export const ValidateCtrlProps = (props) => {
     if (!(typeof props === "object")
         || (typeof props === "object"
             && (!props.hasOwnProperty("name")
@@ -121,7 +119,7 @@ exports.ValidateCtrlProps = function (props) {
     }
     return true;
 };
-exports.ToNumericString = function (value) {
+export const ToNumericString = (value) => {
     if (typeof value !== "number" && typeof value !== "string")
         return "";
     value = (typeof value !== "number") ? value.trim() : value.toString();

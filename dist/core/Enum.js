@@ -1,12 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var CtrlStates;
+export var CtrlStates;
 (function (CtrlStates) {
     CtrlStates[CtrlStates["ERROR"] = -1] = "ERROR";
     CtrlStates[CtrlStates["NORMAL"] = 0] = "NORMAL";
     CtrlStates[CtrlStates["VALID"] = 1] = "VALID";
-})(CtrlStates = exports.CtrlStates || (exports.CtrlStates = {}));
-var CtrlType;
+})(CtrlStates || (CtrlStates = {}));
+export var CtrlType;
 (function (CtrlType) {
     CtrlType[CtrlType["DEFAULT"] = 0] = "DEFAULT";
     CtrlType[CtrlType["SINGLE_OPTION"] = 1] = "SINGLE_OPTION";
@@ -27,4 +25,4 @@ var CtrlType;
     CtrlType[CtrlType["PHONE"] = 33] = "PHONE";
     CtrlType[CtrlType["URL"] = 34] = "URL";
     CtrlType[CtrlType["CEP"] = 35] = "CEP";
-})(CtrlType = exports.CtrlType || (exports.CtrlType = {}));
+})(CtrlType || (CtrlType = {}));
