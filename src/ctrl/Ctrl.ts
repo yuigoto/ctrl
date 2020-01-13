@@ -287,7 +287,7 @@ export class Ctrl {
         );
       } else {
         Object.keys(props).map((key) => {
-          this[key] = props[key];
+          this[key] = (props as any)[key];
         });
         
         // Intercept values on load to avoid problems

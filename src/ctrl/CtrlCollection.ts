@@ -359,7 +359,7 @@ export class CtrlCollection extends Array {
    *     have it declared, set to `true`
    */
   public toJSON (useAlias: boolean = false): object {
-    let returnable: object = {};
+    let returnable: {[key: string]: any} = {};
     
     for (let c: number = 0; c < this.length; c++) {
       let current: Ctrl|CtrlCollection = this[c];
@@ -370,14 +370,14 @@ export class CtrlCollection extends Array {
         } else {
           let tempObject: object = current.toJSON(useAlias);
           for (let key in tempObject) {
-            returnable[key] = tempObject[key];
+            returnable[key] = (tempObject as any)[key];
           }
         }
       } else {
         if (useAlias && current.alias !== null && current.alias !== "") {
-          returnable[current.alias] = current.toJSON()["value"];
+          returnable[current.alias] = (current.toJSON() as any)["value"];
         } else {
-          returnable[current.name] = current.toJSON()["value"];
+          returnable[current.name] = (current.toJSON() as any)["value"];
         }
       }
     }
