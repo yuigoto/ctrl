@@ -1,19 +1,37 @@
+import { Ctrl } from "./ctrl/Ctrl";
+import { CtrlCollection } from "./ctrl/CtrlCollection";
+import { 
+  CtrlStates, 
+  CtrlType
+} from "./core/Enum";
+import { 
+  CtrlCallback, 
+  CtrlChangeCallback, 
+  CtrlOptionItem, 
+  CtrlProps 
+} from "./core/Types";
+
+export {
+  Ctrl, 
+  CtrlCollection, 
+  CtrlStates, 
+  CtrlType, 
+  CtrlCallback, 
+  CtrlChangeCallback, 
+  CtrlOptionItem, 
+  CtrlProps
+};
+
 /**
- * Ctrl
+ * @yuigoto/ctrl
  * ----------------------------------------------------------------------
  * Provides generic, multi-purpose control class, mostly useful for html
  * inputs and forms management.
  * 
- * @author Fabio Y. Goto <lab@yuiti.dev>
- * @license MIT
- * @since 0.5.0
+ * @author    Fabio Y. Goto <lab@yuiti.dev>
+ * @since     0.5.0
  */
-import { Ctrl } from "./ctrl/Ctrl";
-import { CtrlCollection } from "./ctrl/CtrlCollection";
-import { CtrlStates } from "./ctrl/CtrlStates";
-import { CtrlType } from "./ctrl/CtrlType";
-
-export {
+export default {
   Ctrl, 
   CtrlCollection, 
   CtrlStates, 

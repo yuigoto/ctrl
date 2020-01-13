@@ -1,36 +1,33 @@
 /**
- * Ctrl/CtrlDataType/CtrlCallback
+ * core/Types
  * ----------------------------------------------------------------------
+ * Type signatures for objects.
+ * 
+ * @author    Fabio Y. Goto <lab@yuiti.dev>
+ * @since     0.6.0
+ */
+
+/**
  * Describes the blueprint for an interceptor callback for a `Ctrl` instance.
  * 
  * It receives data and returns it modified.
- * 
- * @since 0.5.0
  */
 export type CtrlCallback = (value: any) => any;
 
 /**
- * Ctrl/CtrlDataType/CtrlChangeCallback
- * ----------------------------------------------------------------------
- * Describes the blueprint for an `onChange` event callback for a `Ctrl` 
- * instance.
- * 
- * @since 0.5.0
+ * Describes the blueprint for an `onChange` event callback for a `Control` 
+ * entity.
  */
 export type CtrlChangeCallback = (event: Event, value: any) => void;
 
 /**
- * Ctrl/CtrlDataType/CtrlOptionItem
- * ----------------------------------------------------------------------
- * Describes how you should declare an option for a `CtrlPropsObject` when 
- * using it to create any of these types of controls:
- * - `CtrlType.DROPDOWN`;
- * - `CtrlType.SINGLE_OPTION`;
- * - `CtrlType.MULTIPLE_OPTION`;
- * - `CtrlType.CHECKBOX_GROUP`;
- * - `CtrlType.RADIO_GROUP`;
- * 
- * @since 0.5.0
+ * Describes how you should declare an option for `CtrlPropsObject`, when using 
+ * one of the following field types:
+ * - DROPDOWN;
+ * - SINGLE_OPTION;
+ * - MULTIPLE_OPTION;
+ * - CHECKBOX_GROUP;
+ * - RADIO_GROUP;
  */
 export type CtrlOptionItem = {
   name: string,
@@ -41,20 +38,16 @@ export type CtrlOptionItem = {
 };
 
 /**
- * Ctrl/CtrlDataType/CtrlPropsObject
- * ----------------------------------------------------------------------
- * Describes a blueprint for the props/default props object to generate a 
- * `Ctrl` instance.
- * 
- * @since 0.5.0
+ * Describes what fields you should declare when passing a props for a `Ctrl` 
+ * object.
  */
-export type CtrlPropsObject = {
+export type CtrlProps = {
   name: string,
-  altName?: string,
-  info?: string,
+  alias?: string,
+  infoText?: string,
   description?: string,
   label?: string,
-  autocomplete?: string,
+  autocomplete?: boolean,
   value?: any,
   disabled?: boolean,
   options?: CtrlOptionItem[],
@@ -79,8 +72,8 @@ export type CtrlPropsObject = {
   minAnswers?: number,
   minAnswersMessage?: string,
   regex?: RegExp,
-  dateMessage?: string,
   regexMessage?: string,
+  dateMessage?: string,
   cnpjMessage?: string,
   cpfMessage?: string,
   pisMessage?: string,

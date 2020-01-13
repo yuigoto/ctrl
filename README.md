@@ -38,4 +38,4 @@ See `AUTHORS.md`.
 
 -----
 
-_(c)2019 Fabio Y. Goto_
+_(c)2018-2020 Fabio Y. Goto_
