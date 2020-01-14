@@ -1,6 +1,6 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Generic, multi-purpose control class, mostly useful for html inputs and forms management.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {},
   "peerDependencies": {
-    "@yuigoto/validators": "^0.5.1",
+    "@yuigoto/validators": "^0.5.1"
   },
   "bugs": {
     "url": "https://github.com/yuigoto/ctrl/issues"
