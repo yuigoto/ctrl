@@ -44,6 +44,21 @@ export default class CtrlCollection {
     this.name = name || null;
     this.__collection = [];
   }
+
+  // GETTERS + SETTERS
+  // --------------------------------------------------------------------
+
+  /**
+   * Optional name for the collection, you can use this property to add
+   * sub-collections to a collection, to group inputs.
+   */
+  get collection (): any[] {
+    return this.__collection;
+  }
+
+  set collection (value: any[]) {
+    this.__collection = value;
+  }
   
   // PUBLIC METHODS
   // --------------------------------------------------------------------
