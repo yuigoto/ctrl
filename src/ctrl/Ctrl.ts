@@ -476,7 +476,15 @@ export default class Ctrl {
     if (this.onChange) this.onChange(null, value);
   }
   
-  // TODO: onValueToggle
+  /**
+   * Fires when a value is toggled on any input. Use it for the `CHECKBOX_GROUP` 
+   * and `MULTIPLE_OPTION` input types.
+   *
+   * Must be fired on the renderer.
+   *
+   * @param value
+   *     Value to update
+   */
   public onValueToggle (value: any): void {
     value = this.applyInterceptors(value);
     
@@ -486,7 +494,17 @@ export default class Ctrl {
       valuesArray.push(value);
     } else {
       let _idx: number = valuesArray.indexOf(value);
+
+      if (_idx >= 0) {
+        valuesArray.splice(_idx, 1);
+      } else {
+        valuesArray.push(value);
+      }
     }
+
+    this.value = valuesArray;
+    this.resetState();
+    if (this.onChange) this.onChange(null, value);
   }
   
   /**
