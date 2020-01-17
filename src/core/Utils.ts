@@ -137,8 +137,10 @@ export const MapDefaultCtrlProps = (props: CtrlProps): CtrlProps => {
         : propsToMap.value;
       break;
     case CtrlType.RADIO_GROUP:
-    case CtrlType.CHECKBOX_GROUP:
     case CtrlType.SINGLE_OPTION:
+      propsToMap.value = propsToMap.value || null;
+      break;
+    case CtrlType.CHECKBOX_GROUP:
     case CtrlType.MULTIPLE_OPTION:
       propsToMap.value = (Array.isArray(propsToMap.value))
         ? propsToMap.value
