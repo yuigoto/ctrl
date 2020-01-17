@@ -136,7 +136,6 @@ export const MapDefaultCtrlProps = (props: CtrlProps): CtrlProps => {
         ? propsToMap.value.replace(/([^\d\-().,]+)/g, "")
         : propsToMap.value;
       break;
-    case CtrlType.DROPDOWN: 
     case CtrlType.RADIO_GROUP:
     case CtrlType.CHECKBOX_GROUP:
     case CtrlType.SINGLE_OPTION:
@@ -145,6 +144,7 @@ export const MapDefaultCtrlProps = (props: CtrlProps): CtrlProps => {
         ? propsToMap.value
         : [];
       break;
+    case CtrlType.DROPDOWN: 
     default:
       propsToMap.value = propsToMap.value || "";
       break;
