@@ -1,7 +1,7 @@
 import Ctrl from "./Ctrl";
 import { CtrlProps } from "../core/Types";
 import { ValidateCtrlProps } from "../core/Utils";
-import { CtrlType } from "core/Enum";
+import { CtrlType } from "../core/Enum";
 
 /**
  * ctrl/CtrlCollection
