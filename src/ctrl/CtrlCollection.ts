@@ -1,6 +1,7 @@
 import Ctrl from "./Ctrl";
 import { CtrlProps } from "../core/Types";
 import { ValidateCtrlProps } from "../core/Utils";
+import { CtrlType } from "core/Enum";
 
 /**
  * ctrl/CtrlCollection
@@ -31,6 +32,16 @@ export default class CtrlCollection {
    */
   public name: string;
   
+  /**
+   * Optional string for a validation message.
+   */
+  public message: String;
+  
+  /**
+   * Optional array to store required field names.
+   */
+  public required: String[];
+  
   // LIFECYCLE
   // --------------------------------------------------------------------
   
@@ -42,6 +53,8 @@ export default class CtrlCollection {
    */
   constructor (name: string = null) {
     this.name = name || null;
+    this.message = null;
+    this.required = [];
     this.__collection = [];
   }
 
@@ -311,11 +324,37 @@ export default class CtrlCollection {
    * Validates this collection.
    */
   public validate (): boolean {
-    let status: boolean = true;
+    let status: boolean = true,
+        messages: String|String[] = [],
+        required: String[] = [];
     
     for (let i: number = 0; i < this.__collection.length; i++) {
-      status = this.__collection[i].validate() && status;
+      let current = this.__collection[i],
+          currentValidation = current.validate();
+      
+      if (!currentValidation) {
+        if (current instanceof Ctrl) {
+          if (current.type === CtrlType.HIDDEN) {
+            messages.push(current.message);
+          } else if (current.required) {
+            required.push(`'${current.name}`);
+          }
+        } else if (current instanceof CtrlCollection) {
+          if (current.message) {
+            messages.push(current.message);
+          }
+          
+          if (current.required.length > 0) {
+            required = required.concat(current.required);
+          }
+        }
+      }
+      
+      status = currentValidation && status;
     }
+    
+    this.message = (messages.length > 0) ? messages.join("\r\n") : null;
+    this.required = required;
     
     return status;
   }
