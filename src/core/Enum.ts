@@ -14,7 +14,7 @@ export enum CtrlStates {
   ERROR             = -1,
   NORMAL            = 0,
   VALID             = 1
-}
+};
 
 /**
  * Stores IDs for all input types available for a `Ctrl` instance.
@@ -49,5 +49,9 @@ export enum CtrlType {
   EMAIL             = 32,
   PHONE             = 33,
   URL               = 34,
-  CEP               = 35
-}
+  CEP               = 35,
+  
+  // 999 : HIDDEN
+  // --------------------------------------------------------------------
+  HIDDEN            = 999
+};
