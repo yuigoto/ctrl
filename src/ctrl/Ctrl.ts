@@ -902,7 +902,7 @@ export default class Ctrl {
       value, 
       creditCardMessage
     } = this;
-
+    
     if (
       type === CtrlType.CREDIT_CARD
       && value 
