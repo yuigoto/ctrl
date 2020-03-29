@@ -33,6 +33,12 @@ export default class CtrlCollection {
   public name: string;
   
   /**
+   * Optional label for the collection, you can use this property to show 
+   * the collection name and separate by groups when nesting subcollections.
+   */
+  public label: string;
+  
+  /**
    * Optional string for a validation message.
    */
   public message: String;
