@@ -1,6 +1,6 @@
 {
   "name": "@yuigoto/ctrl",
-  "version": "0.6.11",
+  "version": "0.6.12",
   "description": "Generic, multi-purpose control class, mostly useful for html inputs and forms management.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
