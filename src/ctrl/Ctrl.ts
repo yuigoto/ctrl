@@ -395,6 +395,7 @@ export default class Ctrl {
         return "select";
       case CtrlType.TEXTAREA:
         return "textarea";
+      case CtrlType.NUMBER:
       case CtrlType.CNPJ:
       case CtrlType.CPF:
       case CtrlType.PIS:
@@ -421,7 +422,7 @@ export default class Ctrl {
    */
   public invalidate (message: string = ""): Ctrl {
     this.state = CtrlStates.ERROR;
-    this.message = message || "Invalid input value provided";
+    this.message = message || "";
     return this;
   }
   
