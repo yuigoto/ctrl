@@ -1,5 +1,4 @@
-@yuigoto/ctrl
-=============
+# `@yuigoto/ctrl`
 
 > Generic, multi-purpose control class, mostly useful for html inputs.
 
@@ -11,10 +10,9 @@ Install it with:
 
     npm install --save @yuigoto/ctrl
 
------
+----------------------------------------------------------------------
 
-Documentation
--------------
+## Docs
 
 > **IMPORTANT:**
 > 
@@ -22,20 +20,18 @@ Documentation
 
 Ongoing documentation being handled on the [**wiki**](https://github.com/yuigoto/ctrl/wiki).
 
------
+----------------------------------------------------------------------
 
-License
--------
+## Authors
 
-This project is licensed under the `MIT License`, please check the `LICENSE.md` file for more details.
+See `AUTHORS.md` for more information.
 
------
+----------------------------------------------------------------------
 
-Authors
--------
+## License
 
-See `AUTHORS.md`.
+This project is licensed under the `MIT License`. See `LICENSE.md` for more details on the subjects of the license.
 
------
+----------------------------------------------------------------------
 
-_(c)2018-2020 Fabio Y. Goto_
+_©2018-2020 Fabio Y. Goto_
