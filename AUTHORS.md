@@ -1,13 +1,5 @@
-Authors
-=======
+# `@yuigoto/ctrl` | Authors
 
-- **Fabio Yuiti Goto** ([lab@yuiti.dev][0]) | São Paulo, BR | _Development and Design_
+    - **AuthorName** (emailAddress) - Location - _Role_
 
------
-
-Contributors
-------------
-
-None! :cold_sweat:
-
-[0]: mailto:lab@yuiti.dev
+- **Fabio Y. Goto** (lab@yuiti.dev) - São Paulo, BR - _Developer_
