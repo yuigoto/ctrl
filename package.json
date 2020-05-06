@@ -20,14 +20,14 @@
   "license": "MIT",
   "dependencies": {},
   "peerDependencies": {
-    "@yuigoto/validators": "^0.5.1"
+    "@yuigoto/validators": "^0.5.8"
   },
   "bugs": {
     "url": "https://github.com/yuigoto/ctrl/issues"
   },
   "homepage": "https://github.com/yuigoto/ctrl#readme",
   "devDependencies": {
-    "@yuigoto/validators": "^0.5.1",
+    "@yuigoto/validators": "^0.5.8",
     "typescript": "^3.6.2"
   }
 }
