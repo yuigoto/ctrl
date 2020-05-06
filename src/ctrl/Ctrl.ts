@@ -908,7 +908,8 @@ export default class Ctrl {
       type === CtrlType.CREDIT_CARD
       && value 
       && (
-        !CreditCard.validateDigit(value)
+        !CreditCard.validateSequence(value)
+        || !CreditCard.validateDigit(value)
         || !CreditCard.validateModulo(value)
       )
     ) {
