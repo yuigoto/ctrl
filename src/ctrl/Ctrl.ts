@@ -133,9 +133,39 @@ export default class Ctrl {
   public wrapClass: string;
 
   /**
+   * `onBlur` callable function, must accept the control value as input.
+   */
+  public onBlur: CtrlChangeCallback|null;
+
+  /**
    * `onChange` callable function, must accept the control value as input.
    */
   public onChange: CtrlChangeCallback|null;
+
+  /**
+   * `onClick` callable function, must accept the control value as input.
+   */
+  public onClick: CtrlChangeCallback|null;
+
+  /**
+   * `onFocus` callable function, must accept the control value as input.
+   */
+  public onFocus: CtrlChangeCallback|null;
+
+  /**
+   * `onKeyDown` callable function, must accept the control value as input.
+   */
+  public onKeyDown: CtrlChangeCallback|null;
+
+  /**
+   * `onKeyPress` callable function, must accept the control value as input.
+   */
+  public onKeyPress: CtrlChangeCallback|null;
+
+  /**
+   * `onKeyUp` callable function, must accept the control value as input.
+   */
+  public onKeyUp: CtrlChangeCallback|null;
 
   /**
    * Callable function or array of callable functions that are applied to the

@@ -18,7 +18,7 @@ export type CtrlCallback = (value: any) => any;
  * Describes the blueprint for an `onChange` event callback for a `Control` 
  * entity.
  */
-export type CtrlChangeCallback = (event: Event, value: any) => void;
+export type CtrlChangeCallback = (event: Event, value?: any) => void;
 
 /**
  * Describes how you should declare an option for `CtrlPropsObject`, when using 
@@ -58,7 +58,13 @@ export type CtrlProps = {
   custom?: boolean,
   customClass?: string,
   wrapClass?: string,
+  onBlur?: CtrlChangeCallback|null, 
   onChange?: CtrlChangeCallback|null,
+  onClick?: CtrlChangeCallback|null, 
+  onFocus?: CtrlChangeCallback|null, 
+  onKeyDown?: CtrlChangeCallback|null, 
+  onKeyPress?: CtrlChangeCallback|null, 
+  onKeyUp?: CtrlChangeCallback|null, 
   interceptors?: CtrlCallback|CtrlCallback[],
   message?: string,
   required?: boolean,
