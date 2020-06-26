@@ -31,6 +31,7 @@ export enum CtrlType {
   PASSWORD          = 6,
   DATE              = 7,
   NUMBER            = 8,
+  DATALIST          = 9, 
 
   // 11 => 20 : ALTERNATE NAMES FOR BASIC TYPES
   // --------------------------------------------------------------------

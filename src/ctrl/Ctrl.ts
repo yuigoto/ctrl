@@ -87,6 +87,7 @@ export default class Ctrl {
   /**
    * Control options, when using these types:
    * - DROPDOWN;
+   * - DATALIST;
    * - SINGLE_OPTION;
    * - MULTIPLE_OPTION;
    * - CHECKBOX_GROUP;
@@ -408,6 +409,7 @@ export default class Ctrl {
       case CtrlType.EMAIL:
         return "email";
       case CtrlType.DATE:
+      case CtrlType.DATALIST:
       default:
         return "text";
     }
